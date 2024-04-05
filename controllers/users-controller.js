@@ -12,6 +12,12 @@ const findUser = async(req, res) => {
     }
 }
 
+const createUser = async(req, res) => {
+    const newUser = req.body
+    const savedUser = await newUser.save()
+    res.json(savedUser)
+}
+
 // todo may have to handle errors later
 // add validation for signUp
 const signUp = async(req, res) => {
@@ -39,4 +45,4 @@ const logIn = async(req, res) => {
     }
 }
 
-module.exports = {findUser, signUp, logIn}
+module.exports = {findUser, createUser, signUp, logIn}
