@@ -6,15 +6,25 @@ const usersRouter = require('./routes/users-routes')
 
 
 const app = express()
+
 app.use(cors({
-    credentials: true,
-    origin: 'http://localhost:3000'
+    origin: "*"
 }))
+
 app.use(express.json())
 
 app.use('/api/users', usersRouter);
+app.get('/', (req, res) => {
+    res.status(200).json({ message: 'Connected to Backend!' });
+});
 
 const MONGO_URI = 'mongodb+srv://peacepod:peacepod@cluster0.cxattxq.mongodb.net/' // process.env.MONGO_URI;
-mongoose.connect(MONGO_URI);
-
-app.listen(process.env.PORT || 4000);
+mongoose.connect(MONGO_URI)
+    .then(() => {
+        app.listen(process.env.PORT || 4000);
+        console.log('Connected to DB and listening on port 4000')
+    }
+    )
+    .catch((error) => {
+        console.log(error)
+    })

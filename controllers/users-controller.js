@@ -12,9 +12,10 @@ const findUser = async(req, res) => {
     }
 }
 
+// note feedback from Khoa: passward should be encrypted
 const createUser = async(req, res) => {
     const newUser = req.body
-    const savedUser = await newUser.save()
+    const savedUser = await User.create(newUser)
     res.json(savedUser)
 }
 
