@@ -3,6 +3,7 @@ const express = require('express')
 const cors = require('cors')
 
 const usersRouter = require('./routes/users-routes')
+const postsRouter = require('./routes/posts-routes')
 
 
 const app = express()
@@ -14,6 +15,8 @@ app.use(cors({
 app.use(express.json())
 
 app.use('/api/users', usersRouter);
+app.use('/api/posts', postsRouter);
+
 app.get('/', (req, res) => {
     res.status(200).json({ message: 'Connected to Backend!' });
 });
