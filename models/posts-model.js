@@ -7,15 +7,15 @@ const postSchema = new Schema({
     //     required: true
     // },
     "title": {
-        type: String, 
+        type: String,
         required: true
     },
     "body": {
-        type: String, 
+        type: String,
         required: true
     },
     "isPrompt": {
-        type: Boolean, 
+        type: Boolean,
         required: true
     }
     // "comments": {
