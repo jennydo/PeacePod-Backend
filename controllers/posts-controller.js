@@ -50,15 +50,15 @@ const createPost = async (req, res) => {
         return res.status(400).json({ error: "Your post creation has error" });
     }
 
-    const { avatar, title, body, isPrompt } = req.body;
+    const { title, body, isPrompt } = req.body;
 
-    if (!avatar || !title || !body || isPrompt === undefined) {
+    if (!title || !body || isPrompt === undefined) {
         return res.status(400).json({ error: "Your post creation has error" });
     }
 
     let post;
     try {
-        post = await Post.create({ avatar, title, body, isPrompt });
+        post = await Post.create({ title, body, isPrompt });
     } catch (error) {
         return res.status(400).json({ error: error.message });
     }
