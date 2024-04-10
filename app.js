@@ -14,12 +14,12 @@ app.use(cors({
 
 app.use(express.json())
 
-app.use('/api/users', usersRouter);
-app.use('/api/posts', postsRouter);
-
 app.get('/', (req, res) => {
     res.status(200).json({ message: 'Connected to Backend!' });
 });
+
+app.use('/api/users', usersRouter);
+app.use('/api/posts', postsRouter);
 
 const MONGO_URI = 'mongodb+srv://peacepod:peacepod@cluster0.cxattxq.mongodb.net/' // process.env.MONGO_URI;
 mongoose.connect(MONGO_URI)

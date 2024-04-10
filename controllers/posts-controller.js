@@ -1,56 +1,123 @@
 const Post = require('../models/posts-model');
 const mongoose = require('mongoose');
 
+// Find all posts and sort them by createdAt in descending order
 const getPosts = async (req, res) => {
-    const posts = await Post.find({}).sort({createdAt: -1});
+    let posts;
+    try {
+        posts = await Post.find({}).sort({createdAt: -1});
+    } catch (error) {
+        return res.status(500).json({ error: "An error occurred while trying to retrieve the posts." });
+    }
+
+    if (!posts || posts.length === 0) {
+        return res.status(404).json({ error: "No posts found." });
+    }
+
     res.status(200).json(posts);
 }
 
+// Find a post by its id
 const getPost = async (req, res) => {
-    const id = req.params.postId;
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-        return res.status(404).json({error: "There is no such post."});
+    if (!req.params.postId) {
+        return res.status(400).json({ error: "Post not found." });
     }
-    const post = await Post.findById(id);
-    if (!post) {
-        return res.status(404).json({error: "There is no such post."});
-    }
-    res.status(200).json(post);
-}
 
-const createPost = async (req, res) => {
-    const { avatar, title, body, isPrompt } = req.body; // later will add comments and reactions 
+    const id = req.params.postId;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(400).json({ error: "Post not found." });
+    }
+
+    let post;
     try {
-        const post = await Post.create({ avatar, title, body, isPrompt });
-        res.status(200).json(post);
+        post = await Post.findById(id);
     } catch (error) {
-        res.status(400).json({error: error.mssg});
+        return res.status(500).json({ error: "An error occurred while trying to retrieve the post." });
     }
-}
 
-const deletePost = async (req, res) => {
-    const id = req.params.postId;
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-        return res.status(404).json({error: "There is no such post."});
-    }
-    const post = await Post.findOneAndDelete({_id: id});
     if (!post) {
-        return res.status(404).json({error: "There is no such post."});
+        return res.status(404).json({ error: "Post not found." });
     }
+
     res.status(200).json(post);
 }
 
+// Create a new post
+const createPost = async (req, res) => {
+    // 
+    if (!req.body || Object.keys(req.body).length === 0) {
+        return res.status(400).json({ error: "Your post creation has error" });
+    }
+
+    const { avatar, title, body, isPrompt } = req.body;
+
+    if (!avatar || !title || !body || isPrompt === undefined) {
+        return res.status(400).json({ error: "Your post creation has error" });
+    }
+
+    let post;
+    try {
+        post = await Post.create({ avatar, title, body, isPrompt });
+    } catch (error) {
+        return res.status(400).json({ error: error.message });
+    }
+
+    res.status(201).json(post);
+}
+
+// Delete a post by its id
+const deletePost = async (req, res) => {
+    if (!req.params.postId) {
+        return res.status(400).json({ error: "Post not found." });
+    }
+    const id = req.params.postId;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(400).json({ error: "Post not found." });
+    }
+
+    let post;
+    try {
+        post = await Post.findOneAndDelete({ _id: id });
+    } catch (error) {
+        return res.status(500).json({ error: "An error occurred while trying to delete the post." });
+    }
+
+    if (!post) {
+        return res.status(404).json({ error: "Post not found." });
+    }
+
+    res.status(200).json(post);
+}
+
+// Update a post by its id
 const updatePost = async (req, res) => {
+    if (!req.params.postId) {
+        return res.status(400).json({ error: "Post not found." });
+    }
+
     const id = req.params.postId;
     if (!mongoose.Types.ObjectId.isValid(id)) {
-        return res.status(404).json({error: "There is no such post."});
+        return res.status(400).json({ error: "Post not found." });
     }
-    const post = await Post.findOneAndUpdate({_id: id}, {
-        ...req.body
-    })
+
+    // Check if the request body is empty
+    if (!req.body || Object.keys(req.body).length === 0) {
+        return res.status(400).json({ error: "Update data is required." });
+    }
+
+    let post;
+    try {
+        post = await Post.findOneAndUpdate({ _id: id }, { ...req.body }, { new: true });
+    } catch (error) {
+        return res.status(500).json({ error: "An error occurred while trying to update the post." });
+    }
+
     if (!post) {
-        return res.status(404).json({error: "There is no such post."});
+        return res.status(404).json({ error: "Post not found." });
     }
+
     res.status(200).json(post);
 }
 
