@@ -2,7 +2,7 @@ const Post = require('../models/posts-model');
 const mongoose = require('mongoose');
 
 // Find all posts and sort them by createdAt in descending order
-const getPosts = async (req, res) => {
+const getAllPosts = async (req, res) => {
     let posts;
     try {
         posts = await Post.find({}).sort({createdAt: -1});
@@ -121,4 +121,4 @@ const updatePost = async (req, res) => {
     res.status(200).json(post);
 }
 
-module.exports = { getPosts, getPost, createPost, deletePost, updatePost }
+module.exports = { getAllPosts, getPost, createPost, deletePost, updatePost }

@@ -8,11 +8,12 @@ const findUser = async(req, res) => {
     if (user) {
         res.json(user)
     } else {
-        res.sendStatus(404)
+        return res.status(404).json({ error: "User not found"})
     }
 }
 
 // note feedback from Khoa: passward should be encrypted
+// using brcypt package
 const createUser = async(req, res) => {
     const newUser = req.body
     const savedUser = await User.create(newUser)
@@ -22,14 +23,25 @@ const createUser = async(req, res) => {
 // todo may have to handle errors later
 // add validation for signUp
 const signUp = async(req, res) => {
-    const user = req.body
-    const existingUser = await User.findOne({username: user.username})
+    const { username } = req.body
+    const existingUser = await User.findOne({ username })
+
     if (existingUser) {
-        res.sendStatus(403)
-        return
+        return res.status(403).json({ error: "Username already exists"})
     }
-    const savedUser = await user.save()
-    res.status(201).json(savedUser)
+    
+    /// Change later based on schema
+    const newUser = req.body
+
+    try {
+        const savedUser = await User.create(newUser)
+        if (!savedUser)
+            return res.status(404).json({ error: "Error occurs while saving new user"})
+        return res.status(200).json(savedUser)
+    } catch (error) {
+
+        return res.status(500).json({ error })
+    }
 }
 
 
