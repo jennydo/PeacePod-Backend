@@ -10,8 +10,8 @@ const usersSchema = new mongoose.Schema({
     sexualOrientation: [{ type: String, enum: usersSexualities, required: true }],
     location: { type: String, enum: usersLocations, required: true },
     interests: [{ type: String, enum: usersInterests, required: true }]
-}, { collection: 'users' })
+})
 
-const usersModel = mongoose.model('UsersModel', usersSchema)
+const usersModel = mongoose.model('User', usersSchema)
 
 module.exports = usersModel

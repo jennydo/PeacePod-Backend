@@ -2,15 +2,16 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const postSchema = new Schema({
-    // "avatar": {
-    //     type: String,
-    //     required: true
-    // },
+    "userId": {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
     "title": {
         type: String,
         required: true
     },
-    "body": {
+    "content": {
         type: String,
         required: true
     },
@@ -18,14 +19,6 @@ const postSchema = new Schema({
         type: Boolean,
         required: true
     }
-    // "comments": {
-    //     type: Comment,
-    //     required: false
-    // },
-    // "reactions": {
-    //     type: Reaction, 
-    //     required: false
-    // }
 }, { timestamps: true })
 
 const postsModel = mongoose.model('Post', postSchema);

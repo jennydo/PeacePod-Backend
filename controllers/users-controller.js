@@ -1,5 +1,5 @@
 const User = require('../models/users-model')
-
+const mongoose = require('mongoose')
 
 const findUser = async(req, res) => {
     const userId = req.params.userId
