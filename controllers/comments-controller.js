@@ -2,6 +2,7 @@ const Comment = require('../models/comments-model');
 const mongoose = require('mongoose');
 
 // Find all comments and sort them by createdAt in descending order for a specific post
+// params: postId
 const getComments = async (req, res) => {
     if (!req.params.postId) {
         return res.status(400).json({ error: "Post not found." });
@@ -18,6 +19,7 @@ const getComments = async (req, res) => {
 }
 
 // get a specific comment by its id
+// params: commentId
 const getComment = async (req, res) => {
     if (!req.params.commentId) {
         return res.status(400).json({ error: "Comment not found." });
@@ -45,7 +47,7 @@ const getComment = async (req, res) => {
 
 // create a new comment for a specific post
 // params: postId
-// body: userId, body
+// body: userId, content
 const createComment = async (req, res) => {
     if (!req.params.postId) {
         return res.status(400).json({ error: "Post not found." });
@@ -55,15 +57,15 @@ const createComment = async (req, res) => {
         return res.status(400).json({ error: "Your comment creation has error" });
     }
 
-    const { userId, body } = req.body;
+    const { userId, content } = req.body;
 
-    if (!userId || !body) {
+    if (!userId || !content) {
         return res.status(400).json({ error: "Your comment creation has error" });
     }
 
     let comment;
     try {
-        comment = await Comment.create({ userId, postId: req.params.postId, body });
+        comment = await Comment.create({ userId, postId: req.params.postId, content });
     } catch (error) {
         return res.status(500).json({ error: "An error occurred while trying to create the comment." });
     }
@@ -72,6 +74,7 @@ const createComment = async (req, res) => {
 }
 
 // delete a specific comment by its id
+// params: commentId
 const deleteComment = async (req, res) => {
     if (!req.params.commentId) {
         return res.status(400).json({ error: "Comment not found." });
@@ -98,6 +101,7 @@ const deleteComment = async (req, res) => {
 }
 
 // update a specific comment by its id
+// params: commentId
 const updateComment = async (req, res) => {
     if (!req.params.commentId) {
         return res.status(400).json({ error: "Comment not found." });
