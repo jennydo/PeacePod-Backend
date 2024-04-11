@@ -1,6 +1,8 @@
 const Post = require('../models/posts-model');
 const mongoose = require('mongoose');
 
+const Comment = require('../models/comments-model');
+
 // Find all posts and sort them by createdAt in descending order
 const getPosts = async (req, res) => {
     let posts;
@@ -50,15 +52,15 @@ const createPost = async (req, res) => {
         return res.status(400).json({ error: "Your post creation has error" });
     }
 
-    const { title, body, isPrompt } = req.body;
+    const {userId, title, content, isPrompt } = req.body;
 
-    if (!title || !body || isPrompt === undefined) {
+    if (!userId || !title || !content || isPrompt === undefined) {
         return res.status(400).json({ error: "Your post creation has error" });
     }
 
     let post;
     try {
-        post = await Post.create({ title, body, isPrompt });
+        post = await Post.create({ userId, title, content, isPrompt });
     } catch (error) {
         return res.status(400).json({ error: error.message });
     }
@@ -67,6 +69,7 @@ const createPost = async (req, res) => {
 }
 
 // Delete a post by its id
+// params: postId
 const deletePost = async (req, res) => {
     if (!req.params.postId) {
         return res.status(400).json({ error: "Post not found." });
@@ -79,6 +82,8 @@ const deletePost = async (req, res) => {
 
     let post;
     try {
+        // Delete all comments associated with the post
+        await Comment.deleteMany({ postId: id });
         post = await Post.findOneAndDelete({ _id: id });
     } catch (error) {
         return res.status(500).json({ error: "An error occurred while trying to delete the post." });

@@ -8,11 +8,10 @@ const commentSchema = new Schema({
     "postId": {
         type: Schema.Types.ObjectId, ref: 'Post'
     },
-    "body": {
+    "content": {
         type: String,
         required: true
-    },
-    "reactions": [{ type: Schema.Types.ObjectId, ref: 'Reaction' }]
+    }
 }, {timestamps: true}
 )
 

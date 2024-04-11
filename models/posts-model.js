@@ -11,22 +11,14 @@ const postSchema = new Schema({
         type: String,
         required: true
     },
-    "body": {
+    "content": {
         type: String,
         required: true
     },
     "isPrompt": {
         type: Boolean,
         required: true
-    },
-    "comments": [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Comment',
-    }],
-    "reactions": [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Reaction'
-    }]
+    }
 }, { timestamps: true })
 
 const postsModel = mongoose.model('Post', postSchema);
