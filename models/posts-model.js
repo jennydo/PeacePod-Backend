@@ -17,7 +17,8 @@ const postSchema = new Schema({
     },
     "isPrompt": {
         type: Boolean,
-        required: true
+        required: true,
+        default: false
     }
 }, { timestamps: true })
 
