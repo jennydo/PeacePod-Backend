@@ -1,3 +1,9 @@
+// const dotenv = require('dotenv');
+// const env = dotenv.config();
+// if (env.error) {
+//     throw new Error("Failed to load the .env file!");
+// }
+
 const mongoose = require('mongoose');
 const express = require('express')
 const cors = require('cors')
@@ -30,7 +36,7 @@ app.use('/api/comments', commentsRouter)
 app.use('/api/reactions', reactionsRouter)
 
 // connect to MongoDB
-const MONGO_URI = 'mongodb+srv://peacepod:peacepod@cluster0.cxattxq.mongodb.net/' // process.env.MONGO_URI;
+const MONGO_URI = "mongodb+srv://peacepod:peacepod@cluster0.cxattxq.mongodb.net/";
 mongoose.connect(MONGO_URI)
     .then(() => {
         app.listen(process.env.PORT || 4000);
