@@ -1,6 +1,12 @@
 const User = require('../models/users-model')
 const mongoose = require('mongoose')
 
+// get all users
+const getUsers = async(req, res) => {
+    const users = await User.find()
+    res.json(users)
+}
+
 const findUser = async(req, res) => {
     const userId = req.params.userId
     const user = await User.findById(userId)
@@ -46,4 +52,4 @@ const logIn = async(req, res) => {
     }
 }
 
-module.exports = {findUser, createUser, signUp, logIn}
+module.exports = {getUsers, findUser, createUser, signUp, logIn}

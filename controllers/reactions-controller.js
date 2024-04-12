@@ -4,7 +4,6 @@ const mongoose = require('mongoose');
 // Create a new reaction on specified post
 // params: postId
 // body: userId
-// returns: reaction
 const createReaction = async (req, res) => {
     if (!req.params.postId) {
         return res.status(400).json({ error: "Post not found." });
@@ -36,7 +35,7 @@ const createReaction = async (req, res) => {
 // Delete a reaction on specified post
 // params: postId
 // body: userId
-// returns: message
+// returns: reactionDeleted
 const deleteReaction = async (req, res) => {
     if (!req.params.postId) {
         return res.status(400).json({ error: "Post not found." });
@@ -52,14 +51,15 @@ const deleteReaction = async (req, res) => {
         return res.status(400).json({ error: "Your reaction deletion has error" });
     }
 
+    let reactionDeleted
     try {
-        await Reaction.deleteOne({ userId, postId: req.params.postId });
+        reactionDeleted = await Reaction.deleteOne({ userId, postId: req.params.postId });
     }
     catch (error) {
         return res.status(500).json({ error: "An error occurred while trying to delete the reaction." });
     }
 
-    return res.status(200).json({ message: "Reaction deleted successfully." });
+    return res.status(200).json({ reactionDeleted });
 }
 
 // Count the number of reactions on a post
