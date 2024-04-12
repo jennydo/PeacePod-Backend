@@ -1,6 +1,12 @@
+const dotenv = require('dotenv');
+const env = dotenv.config();
+if (env.error) {
+    throw new Error("Failed to load the .env file!");
+}
+
 const mongoose = require('mongoose');
 const express = require('express')
-const cors = require('cors')
+const cors = require('cors');
 
 /// node-cron for task scheduling
 const cron = require('node-cron')
@@ -8,6 +14,7 @@ const { getNewPrompt } = require('./controllers/posts-controller')
 
 // create routes
 const usersRouter = require('./routes/users-routes')
+const quotesTipsRouter = require('./routes/quotes-tips-routes')
 const postsRouter = require('./routes/posts-routes')
 const commentsRouter = require('./routes/comments-routes')
 const reactionsRouter = require('./routes/reactions-routes')
@@ -22,16 +29,19 @@ app.use(cors({
 
 app.use(express.json())
 
+
 // test route to check if backend is connected
 app.get('/', (req, res) => {
     res.status(200).json({ message: 'Connected to Backend!' });
 });
+
 
 // use routes
 app.use('/api/users', usersRouter);
 app.use('/api/posts', postsRouter);
 app.use('/api/comments', commentsRouter)
 app.use('/api/reactions', reactionsRouter)
+app.use('/api/quotestips', quotesTipsRouter)
 
 /// Get daily prompt
 cron.schedule("*/2 * * * * *", () => {
@@ -39,7 +49,7 @@ cron.schedule("*/2 * * * * *", () => {
 })
 
 // connect to MongoDB
-const MONGO_URI = 'mongodb+srv://peacepod:peacepod@cluster0.cxattxq.mongodb.net/' // process.env.MONGO_URI;
+const MONGO_URI = process.env.MONGO_URI;
 mongoose.connect(MONGO_URI)
     .then(() => {
         app.listen(process.env.PORT || 4000);
