@@ -6,10 +6,11 @@ if (env.error) {
 
 const mongoose = require('mongoose');
 const express = require('express')
-const cors = require('cors')
+const cors = require('cors');
 
 // create routes
 const usersRouter = require('./routes/users-routes')
+const quotesTipsRouter = require('./routes/quotes-tips-routes')
 const postsRouter = require('./routes/posts-routes')
 const commentsRouter = require('./routes/comments-routes')
 const reactionsRouter = require('./routes/reactions-routes')
@@ -24,16 +25,19 @@ app.use(cors({
 
 app.use(express.json())
 
+
 // test route to check if backend is connected
 app.get('/', (req, res) => {
     res.status(200).json({ message: 'Connected to Backend!' });
 });
+
 
 // use routes
 app.use('/api/users', usersRouter);
 app.use('/api/posts', postsRouter);
 app.use('/api/comments', commentsRouter)
 app.use('/api/reactions', reactionsRouter)
+app.use('/api/quotestips', quotesTipsRouter)
 
 // connect to MongoDB
 const MONGO_URI = process.env.MONGO_URI;
