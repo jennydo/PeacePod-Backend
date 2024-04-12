@@ -2,6 +2,9 @@ const Post = require('../models/posts-model');
 const mongoose = require('mongoose');
 
 const Comment = require('../models/comments-model');
+const promptsConstants = require('../constants/prompts')
+const PromptIndex = require('../models/promptIndex');
+
 
 // Find all posts and sort them by createdAt in descending order
 const getPosts = async (req, res) => {
@@ -126,4 +129,25 @@ const updatePost = async (req, res) => {
     res.status(200).json(post);
 }
 
-module.exports = { getPosts, getPost, createPost, deletePost, updatePost }
+/// GET /posts/prompt
+const getPrompt = async (req, res) => {
+
+    const idxObj = await PromptIndex.find()
+    const idx = idxObj[0].current
+
+    const prompt = promptsConstants[idx]
+
+    // console.log("update idx of ", updateIdx)
+    res.json(prompt)
+}
+
+const getNewPrompt = async () => {
+    const idxObj = await PromptIndex.find()
+    const idx = idxObj[0].current
+
+    const updateIdx = await PromptIndex.findOneAndUpdate({ current: idx }, { current: (idx + 1) % promptsConstants.length})
+
+    console.log(updateIdx)
+}
+
+module.exports = { getPosts, getPost, createPost, deletePost, updatePost, getPrompt, getNewPrompt }
