@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 
 // Find all comments and sort them by createdAt in descending order for a specific post
 // params: postId
+// returns: comments
 const getComments = async (req, res) => {
     if (!req.params.postId) {
         return res.status(400).json({ error: "Post not found." });
@@ -20,6 +21,7 @@ const getComments = async (req, res) => {
 
 // get a specific comment by its id
 // params: commentId
+// returns: comment
 const getComment = async (req, res) => {
     if (!req.params.commentId) {
         return res.status(400).json({ error: "Comment not found." });
@@ -48,6 +50,7 @@ const getComment = async (req, res) => {
 // create a new comment for a specific post
 // params: postId
 // body: userId, content
+// returns: comment
 const createComment = async (req, res) => {
     if (!req.params.postId) {
         return res.status(400).json({ error: "Post not found." });
@@ -75,6 +78,7 @@ const createComment = async (req, res) => {
 
 // delete a specific comment by its id
 // params: commentId
+// returns: comment deleted
 const deleteComment = async (req, res) => {
     if (!req.params.commentId) {
         return res.status(400).json({ error: "Comment not found." });
@@ -102,6 +106,8 @@ const deleteComment = async (req, res) => {
 
 // update a specific comment by its id
 // params: commentId
+// body: content
+// returns: updated comment
 const updateComment = async (req, res) => {
     if (!req.params.commentId) {
         return res.status(400).json({ error: "Comment not found." });
