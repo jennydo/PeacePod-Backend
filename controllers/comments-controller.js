@@ -11,7 +11,7 @@ const getComments = async (req, res) => {
 
     let comments;
     try {
-        comments = await Comment.find({postId: req.params.postId}).sort({createdAt: -1});
+        comments = await Comment.find({postId: req.params.postId}).populate("userId").sort({createdAt: -1});
     } catch (error) {
         return res.status(500).json({ error: "An error occurred while trying to retrieve the comments." });
     }
