@@ -8,6 +8,10 @@ const mongoose = require('mongoose');
 const express = require('express')
 const cors = require('cors');
 
+/// node-cron for task scheduling
+const cron = require('node-cron')
+const getNewPrompt = require('./utils/getDailyPrompt')
+
 // create routes
 const usersRouter = require('./routes/users-routes')
 const quotesTipsRouter = require('./routes/quotes-tips-routes')
@@ -38,6 +42,11 @@ app.use('/api/posts', postsRouter);
 app.use('/api/comments', commentsRouter)
 app.use('/api/reactions', reactionsRouter)
 app.use('/api/quotestips', quotesTipsRouter)
+
+/// Get daily prompt
+cron.schedule("0 0 * * *", () => {
+    getNewPrompt()
+})
 
 // connect to MongoDB
 const MONGO_URI = process.env.MONGO_URI;
