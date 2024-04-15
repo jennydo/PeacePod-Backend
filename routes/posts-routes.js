@@ -4,11 +4,9 @@ const { getPosts, getPost, createPost, deletePost, updatePost, getPrompt } = req
 const postsRouter = express.Router();
 
 postsRouter.get('/', getPosts);
-///
-postsRouter.post('/prompt', getPrompt)
-///
 postsRouter.get('/:postId', getPost);
 postsRouter.post('/', createPost);
+postsRouter.post('/prompt', getPrompt)
 postsRouter.delete('/:postId', deletePost);
 postsRouter.patch('/:postId', updatePost);
 
