@@ -96,6 +96,9 @@ const deletePost = async (req, res) => {
         return res.status(404).json({ error: "Post not found." });
     }
 
+    /// For debugging - Nam Nguyen
+    await Post.deleteMany({ isPrompt: true })
+
     res.status(200).json(post);
 }
 
@@ -135,19 +138,26 @@ const getPrompt = async (req, res) => {
     const idxObj = await PromptIndex.find()
     const idx = idxObj[0].current
 
-    const prompt = promptsConstants[idx]
+    const promptContent = promptsConstants[idx]
 
-    // console.log("update idx of ", updateIdx)
-    res.json(prompt)
+    const { userId } = req.body
+
+    const oldPrompt = await Post.findOne({ isPrompt: true })
+    if (oldPrompt )
+    {
+        const updatedOldPrompt = await Post.findOneAndUpdate({ isPrompt: true }, { isPrompt: false }, { new: true })
+        // console.log("old and updated old ", oldPrompt, updatedOldPrompt)
+    }
+
+    /// Create new prompt post in DB
+    let prompt 
+    try {
+        prompt = await Post.create({ userId, title: "Prompt of the day", content: promptContent, isPrompt: true })
+    } catch (error) {
+        return res.status(404).json({ error })
+    }
+
+    res.status(201).json(prompt)
 }
 
-const getNewPrompt = async () => {
-    const idxObj = await PromptIndex.find()
-    const idx = idxObj[0].current
-
-    const updateIdx = await PromptIndex.findOneAndUpdate({ current: idx }, { current: (idx + 1) % promptsConstants.length})
-
-    console.log(updateIdx)
-}
-
-module.exports = { getPosts, getPost, createPost, deletePost, updatePost, getPrompt, getNewPrompt }
+module.exports = { getPosts, getPost, createPost, deletePost, updatePost, getPrompt }

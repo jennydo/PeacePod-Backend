@@ -5,7 +5,7 @@ const postsRouter = express.Router();
 
 postsRouter.get('/', getPosts);
 ///
-postsRouter.get('/prompt', getPrompt)
+postsRouter.post('/prompt', getPrompt)
 ///
 postsRouter.get('/:postId', getPost);
 postsRouter.post('/', createPost);
