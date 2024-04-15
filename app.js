@@ -10,7 +10,7 @@ const cors = require('cors');
 
 /// node-cron for task scheduling
 const cron = require('node-cron')
-const { getNewPrompt } = require('./controllers/posts-controller')
+const getNewPrompt = require('./utils/getDailyPrompt')
 
 // create routes
 const usersRouter = require('./routes/users-routes')
@@ -44,7 +44,7 @@ app.use('/api/reactions', reactionsRouter)
 app.use('/api/quotestips', quotesTipsRouter)
 
 /// Get daily prompt
-cron.schedule("*/2 * * * * *", () => {
+cron.schedule("*/5 * * * * *", () => {
     getNewPrompt()
 })
 
