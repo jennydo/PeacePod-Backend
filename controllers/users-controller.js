@@ -1,32 +1,41 @@
 const User = require('../models/users-model')
-const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 const validator = require('validator')
 
-// get all users
+// @route GET /api/users
+// @desc get all users
+// @access Public
 const getUsers = async(req, res) => {
     const users = await User.find()
-    res.json(users)
+    res.status(201).json(users)
 }
 
+// @route GET /api/users/:userId
+// @desc get user by id
+// @access Public
 const findUser = async(req, res) => {
     const userId = req.params.userId
     const user = await User.findById(userId)
 
     if (user) {
-        res.json(user)
+        res.status(201).json(user)
     } else {
-        res.sendStatus(404)
+        res.status(404).json({ error: "User not found"})
     }
 }
 
+// @route POST /api/users/createUser
+// @desc create a new user
+// @access Public
 const createUser = async(req, res) => {
     const newUser = req.body
     const savedUser = await User.create(newUser)
     res.json(savedUser)
 }
 
-
+// @route GET /api/users/signUp
+// @desc register a new user
+// @access Public
 const signUp = async(req, res) => {
     const { username, email, password, pronounce, gender, sexualOrientation, location, interests, avatar } = req.body
     
@@ -57,7 +66,9 @@ const signUp = async(req, res) => {
     }
 }
 
-
+// @route GET /api/users/logIn
+// @desc Log in 
+// @access Public
 const logIn = async(req, res) => {
     const {username, password} = req.body
 
