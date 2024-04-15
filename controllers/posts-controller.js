@@ -168,8 +168,8 @@ const deletePost = async (req, res) => {
         return res.status(404).json({ error: "Post not found." });
     }
 
-    /// For debugging - Nam Nguyen
-    await Post.deleteMany({ isPrompt: true })
+    // /// For debugging - Nam Nguyen
+    // await Post.deleteMany({ isPrompt: true })
 
     res.status(200).json(post);
 }
