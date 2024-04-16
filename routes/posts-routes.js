@@ -1,7 +1,10 @@
 const express = require('express')
 const { getPosts, getPost, createPost, deletePost, updatePost, getPrompt } = require('../controllers/posts-controller');
+const requireAuth = require('../middleware/requireAuth')
 
 const postsRouter = express.Router();
+
+// postsRouter.use(requireAuth)
 
 postsRouter.get('/', getPosts);
 postsRouter.get('/:postId', getPost);
