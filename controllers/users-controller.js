@@ -2,6 +2,11 @@ const User = require('../models/users-model')
 const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 const validator = require('validator')
+const jwt = require('jsonwebtoken')
+
+const createToken = (_id) => {
+    return jwt.sign({_id}, process.env.SECRET, {expiresIn: '3d'})
+}
 
 // get all users
 const getUsers = async(req, res) => {
@@ -19,13 +24,6 @@ const findUser = async(req, res) => {
         res.sendStatus(404)
     }
 }
-
-const createUser = async(req, res) => {
-    const newUser = req.body
-    const savedUser = await User.create(newUser)
-    res.json(savedUser)
-}
-
 
 const signUp = async(req, res) => {
     const { username, email, password, pronounce, gender, sexualOrientation, location, interests, avatar } = req.body
@@ -48,9 +46,9 @@ const signUp = async(req, res) => {
         const salt = await bcrypt.genSalt(10)
         const hash = await bcrypt.hash(password, salt)
 
-        const savedUser = await User.create({username, email, password: hash, pronounce, gender, sexualOrientation, location, interests, avatar})
-
-        res.status(201).json(savedUser)
+        const newUser = await User.create({username, email, password: hash, pronounce, gender, sexualOrientation, location, interests, avatar})
+        const token = createToken(newUser._id)
+        res.status(201).json({username, token})
 
     } catch (error) {
         res.status(400).json({error: error.message})
@@ -73,10 +71,11 @@ const logIn = async(req, res) => {
         if (!match) {
             throw Error('Incorrect password.')
         }
-        res.status(200).json({username, password})
+        const token = createToken(user._id)
+        res.status(200).json({username, token})
     } catch (error) {
         res.status(400).json({error: error.message})
     }
 }
 
-module.exports = {getUsers, findUser, createUser, signUp, logIn}
+module.exports = {getUsers, findUser, signUp, logIn}
