@@ -40,15 +40,14 @@ const deleteReaction = async (req, res) => {
     if (!req.params.postId) {
         return res.status(400).json({ error: "Post not found." });
     }
-
     if (!req.body || Object.keys(req.body).length === 0) {
-        return res.status(400).json({ error: "Your reaction deletion has error" });
+        return res.status(400).json({ error: "Your reaction deletion has error - req body" });
     }
 
     const { userId } = req.body;
 
     if (!userId) {
-        return res.status(400).json({ error: "Your reaction deletion has error" });
+        return res.status(400).json({ error: "Your reaction deletion has error - userId" });
     }
 
     let reactionDeleted
@@ -112,19 +111,21 @@ const isReacted = async (req, res) => {
         return res.status(400).json({ error: "Post not found." });
     }
 
-    if (!req.body || Object.keys(req.body).length === 0) {
-        return res.status(400).json({ error: "Your reaction check has error" });
-    }
+    // if (!req.body || Object.keys(req.body).length === 0) {
+    //     return res.status(400).json({ error: "Your reaction check has error - req body" });
+    // }
 
-    const { userId } = req.body;
+    // const { userId } = req.params.userId;
+    const {postId, userId} = req.params;
 
     if (!userId) {
-        return res.status(400).json({ error: "Your reaction check has error" });
+        return res.status(400).json({ error: "Your reaction check has error - userId" });
     }
 
     let reaction;
     try {
-        reaction = await Reaction.findOne({ userId, postId: req.params.postId });
+        // reaction = await Reaction.findOne({ userId, postId: req.params.postId });
+        reaction = await Reaction.findOne({ userId, postId });
     } catch (error) {
         return res.status(500).json({ error: "An error occurred while trying to retrieve the reaction." });
     }

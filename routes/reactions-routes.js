@@ -12,7 +12,6 @@ reactionsRouter.post('/:postId', createReaction);
 // delete a reaction to a post by a specific user
 reactionsRouter.delete('/:postId', deleteReaction);
 // check if a user has reacted to a post
-reactionsRouter.get('/isReacted/:postId', isReacted);
-
+reactionsRouter.get('/isReacted/:postId/:userId', isReacted);
 
 module.exports = reactionsRouter;
