@@ -29,12 +29,10 @@ app.use(cors({
 
 app.use(express.json())
 
-
 // test route to check if backend is connected
 app.get('/', (req, res) => {
     res.status(200).json({ message: 'Connected to Backend!' });
 });
-
 
 // use routes
 app.use('/api/users', usersRouter);

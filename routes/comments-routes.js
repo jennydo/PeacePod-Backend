@@ -3,12 +3,12 @@ const { getComments, getComment, createComment, deleteComment, updateComment } =
 
 const commentsRouter = express.Router();
 
-// get all comments for specific post/comment
-commentsRouter.get('/post/:postId', getComments);
-// get specific comment by id
+// get all comments for specific post
+commentsRouter.get('/:postId', getComments);
+// get specific comment by comment id
 commentsRouter.get('/:commentId', getComment);
 // create comment for specific post
-commentsRouter.post('/:postId', createComment);
+commentsRouter.post('/:postId/:userId', createComment);
 // delete specific comment by id
 commentsRouter.delete('/:commentId', deleteComment);
 // update comment body for specific comment

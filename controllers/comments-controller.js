@@ -48,27 +48,31 @@ const getComment = async (req, res) => {
 }
 
 // create a new comment for a specific post
-// params: postId
-// body: userId, content
+// params: postId, userId
+// body: content
 // returns: comment
 const createComment = async (req, res) => {
     if (!req.params.postId) {
         return res.status(400).json({ error: "Post not found." });
     }
 
+    if (!req.params.userId) {
+        return res.status(400).json({ error: "User not found." });
+    }
+
     if (!req.body || Object.keys(req.body).length === 0) {
         return res.status(400).json({ error: "Your comment creation has error" });
     }
 
-    const { userId, content } = req.body;
+    const { content } = req.body;
 
-    if (!userId || !content) {
+    if (!content) {
         return res.status(400).json({ error: "Your comment creation has error" });
     }
 
     let comment;
     try {
-        comment = await Comment.create({ userId, postId: req.params.postId, content });
+        comment = await Comment.create({ userId: req.params.userId, postId: req.params.postId, content });
     } catch (error) {
         return res.status(500).json({ error: "An error occurred while trying to create the comment." });
     }
