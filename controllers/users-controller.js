@@ -26,7 +26,7 @@ const findUser = async(req, res) => {
 }
 
 const signUp = async(req, res) => {
-    const { username, email, password, pronounce, gender, sexualOrientation, location, interests, avatar } = req.body
+    const { username, email, password, pronounce, gender, sexualOrientation, location, interests } = req.body
     
     try {
         if (!email || !password || !username || !pronounce || !gender || !sexualOrientation || !location ) {
@@ -46,7 +46,7 @@ const signUp = async(req, res) => {
         const salt = await bcrypt.genSalt(10)
         const hash = await bcrypt.hash(password, salt)
 
-        const newUser = await User.create({username, email, password: hash, pronounce, gender, sexualOrientation, location, interests, avatar})
+        const newUser = await User.create({username, email, password: hash, pronounce, gender, sexualOrientation, location, interests})
         const token = createToken(newUser._id)
         res.status(201).json({username, token})
 
