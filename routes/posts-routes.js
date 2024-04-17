@@ -4,7 +4,7 @@ const requireAuth = require('../middleware/requireAuth')
 
 const postsRouter = express.Router();
 
-// postsRouter.use(requireAuth)
+postsRouter.use(requireAuth)
 
 postsRouter.get('/', getPosts);
 postsRouter.get('/:postId', getPost);
