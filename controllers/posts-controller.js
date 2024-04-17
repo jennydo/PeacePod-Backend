@@ -84,10 +84,8 @@ const getPrompt = async (req, res) => {
 
     const idxObj = await PromptIndex.find()
     const idx = idxObj[0].current
-    const updatedIndex = await PromptIndex.findOneAndUpdate({ current: idx }, { $inc: { current: 1 } });
-    const newIdx = updatedIndex.current;
 
-    const promptContent = promptsConstants[newIdx]
+    const promptContent = promptsConstants[idx]
 
     const { userId } = req.body
 
