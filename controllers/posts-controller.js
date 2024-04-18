@@ -174,6 +174,19 @@ const deletePost = async (req, res) => {
     res.status(200).json(post);
 }
 
+// @route DELETE /posts/prompt
+// @desc delete all current prompts
+// @access Public
+const clearPrompts = async (req, res) => {
+    const title = "Prompt of the day"
+
+    const deletedPrompts = await Post.deleteMany({ title })
+
+    if (!deletedPrompts)
+        return res.status(404).json({ error: "Cannot delete all prompts"})
+    return res.status(201).json(deletedPrompts)
+}
 
 
-module.exports = { getPosts, getPost, createPost, deletePost, updatePost, getPrompt }
+
+module.exports = { getPosts, getPost, createPost, deletePost, updatePost, getPrompt, clearPrompts }
