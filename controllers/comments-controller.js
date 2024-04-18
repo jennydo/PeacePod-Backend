@@ -24,13 +24,13 @@ const getComments = async (req, res) => {
 // returns: comment
 const getComment = async (req, res) => {
     if (!req.params.commentId) {
-        return res.status(400).json({ error: "Comment not found." });
+        return res.status(400).json({ error: "Missing comment id." });
     }
 
     const id = req.params.commentId;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
-        return res.status(400).json({ error: "Comment not found." });
+        return res.status(400).json({ error: "Not a valid commenting id." });
     }
 
     let comment;
