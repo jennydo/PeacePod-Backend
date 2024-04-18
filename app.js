@@ -7,6 +7,7 @@ if (env.error) {
 const mongoose = require('mongoose');
 const express = require('express')
 const cors = require('cors');
+const socket = require('socket.io')
 
 /// node-cron for task scheduling
 const cron = require('node-cron')
@@ -19,6 +20,7 @@ const postsRouter = require('./routes/posts-routes')
 const commentsRouter = require('./routes/comments-routes')
 const reactionsRouter = require('./routes/reactions-routes');
 const chatsRouter = require('./routes/chats-routes');
+const messagesRouter = require('./routes/messages-routes');
 
 // create express app
 const app = express()
@@ -29,7 +31,6 @@ app.use(cors({
 }))
 
 app.use(express.json())
-
 
 // test route to check if backend is connected
 app.get('/', (req, res) => {
@@ -44,6 +45,7 @@ app.use('/api/comments', commentsRouter)
 app.use('/api/reactions', reactionsRouter)
 app.use('/api/quotestips', quotesTipsRouter)
 app.use('/api/chats', chatsRouter)
+app.use('/api/messages', messagesRouter)
 
 /// Get daily prompt
 cron.schedule("0 0 * * *", () => {
@@ -54,8 +56,12 @@ cron.schedule("0 0 * * *", () => {
 const MONGO_URI = process.env.MONGO_URI;
 mongoose.connect(MONGO_URI)
     .then(() => {
-        app.listen(process.env.PORT || 4000);
+        const server = app.listen(process.env.PORT || 4000);
         console.log('Connected to DB and listening on port 4000')
+        const io = socket(server)
+        io.on("connection", () => {
+            console.log("Connected to socket.io")
+        })
     }
     )
     .catch((error) => {

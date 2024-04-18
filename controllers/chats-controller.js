@@ -15,7 +15,7 @@ const accessChat = async (req, res) => {
             { users: { $elemMatch: { $eq: req.user._id }}}, // the current user that is logged in 
             { users: { $elemMatch: { $eq: userId }}} // the user we're sending message to 
         ]
-    }).populate("users", "username avatar email").populate("lastestMessage")
+    }).populate("users", "username avatar email").populate("latestMessage")
 
     isChat = await User.populate(isChat, {
         path: "latestMessage.sender",
