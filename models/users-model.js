@@ -13,7 +13,8 @@ const usersSchema = new mongoose.Schema({
     avatar: {
         type: String, 
         default: "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg",
-    }
+    },
+    bio: { type: String, required: false, default: "" }
 })
 
 const usersModel = mongoose.model('User', usersSchema)

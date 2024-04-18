@@ -37,7 +37,7 @@ const createUser = async(req, res) => {
 // @desc register a new user
 // @access Public
 const signUp = async(req, res) => {
-    const { username, email, password, pronounce, gender, sexualOrientation, location, interests, avatar } = req.body
+    const { username, email, password, pronounce, gender, sexualOrientation, location, interests, avatar, bio } = req.body
     
     try {
         if (!email || !password || !username || !pronounce || !gender || !sexualOrientation || !location ) {
@@ -57,7 +57,7 @@ const signUp = async(req, res) => {
         const salt = await bcrypt.genSalt(10)
         const hash = await bcrypt.hash(password, salt)
 
-        const savedUser = await User.create({username, email, password: hash, pronounce, gender, sexualOrientation, location, interests, avatar})
+        const savedUser = await User.create({username, email, password: hash, pronounce, gender, sexualOrientation, location, interests, avatar, bio})
 
         res.status(201).json(savedUser)
 
@@ -90,4 +90,52 @@ const logIn = async(req, res) => {
     }
 }
 
-module.exports = {getUsers, findUser, createUser, signUp, logIn}
+// @route PATCH /api/users/:userId
+// @desc Update user
+// @access Private
+const updateUser = async (req, res) => {
+    const { userId } = req.params
+
+    /// Check if request has params userId
+    if (!userId)
+        return res.status(404).json({ error: "User id is required."})
+
+    const user = await User.findById(userId)
+
+    /// Check if user exists
+    if (!user)
+        return res.status(404).json({ error: "User not found."})
+
+
+    /// If exits
+    const updatedUser = await User.findOneAndUpdate({ _id: userId }, { ...req.body }, { new: true })
+
+    if (!updatedUser)
+        return res.status(404).json({ error: "Cannot update user." })
+
+    return res.status(201).json(updatedUser)
+}
+
+// @route DELETE /api/users/:userId
+// @desc Delete user
+// @access Private
+const deleteUser = async (req, res) => {
+    const { userId } = req.params 
+
+    if (!userId)
+        return res.status(404).json({ error: "Missing user id."})
+
+    const user = await User.findById(userId)
+
+    if (!user)
+        return res.status(404).json({ error: "User not found."})
+
+    const deletedUser = await User.findOneAndDelete({ _id: userId })
+
+    if (!deletedUser)
+        return res.status(404).json({ error: "Cannot delete this user."})
+
+    return res.status(201).json(deletedUser)
+}
+
+module.exports = {getUsers, findUser, createUser, updateUser, deleteUser, signUp, logIn}
