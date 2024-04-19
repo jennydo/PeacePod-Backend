@@ -44,7 +44,7 @@ app.use('/api/reactions', reactionsRouter)
 app.use('/api/quotestips', quotesTipsRouter)
 
 /// Get daily prompt
-cron.schedule("0 0 * * *", () => {
+cron.schedule("0 */15 * * *", () => {
     getNewPrompt()
 })
 
