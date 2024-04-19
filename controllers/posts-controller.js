@@ -55,12 +55,13 @@ const getPost = async (req, res) => {
 // @desc create a new normal post
 // @access Public
 const createPost = async (req, res) => {
-    // 
     if (!req.body || Object.keys(req.body).length === 0) {
         return res.status(400).json({ error: "Missing fields" });
     }
 
-    const {userId, title, content, isPrompt } = req.body;
+    const userId = req.user._id
+
+    const {title, content, isPrompt } = req.body;
 
     if (!userId || !title || !content || isPrompt === undefined) {
         return res.status(400).json({ error: "Missing fields" });
