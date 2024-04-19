@@ -7,6 +7,9 @@ if (env.error) {
 const mongoose = require('mongoose');
 const express = require('express')
 const cors = require('cors');
+const socket = require('socket.io');
+const http = require('http');
+
 
 // create routes
 const usersRouter = require('./routes/users-routes')
@@ -50,3 +53,76 @@ mongoose.connect(MONGO_URI)
     .catch((error) => {
         console.log(error)
     })
+
+
+// Socket
+// Socket setup (server)
+const server = http.createServer(app);
+var io = socket(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"],
+  },
+});
+
+io.on('connection', (socket) => {
+
+    console.log('made socket connection', socket.id);
+
+    // Handle chat event
+    socket.on('chat', (data) => {
+        io.sockets.emit('chat', data);
+    });
+
+    // Handle typing event
+    socket.on('typing', (data) => {
+        socket.broadcast.emit('typing', data);
+    })
+
+});
+
+const PORT = process.env.PORT || 5000;
+server.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
+
+
+// const server = createServer(app);
+// const io = socket(server);
+
+// // event connection. function(client socket)
+// io.on('connection', (socket) => {
+//     console.log('connected')
+
+//     socket.on('chat', (data) => {
+//         // emit sent data to all client sockets
+//         io.sockets.emit('chat', data)
+//     })
+    
+// });
+
+// // server.js
+// const server = http.createServer(app);
+// const io = socket(server);
+
+// io.on('connection', (socket) => {
+//   console.log('A user connected');
+
+//   // Handle chat messages
+//   socket.on('chat message', (message) => {
+//     console.log('Message:', message);
+//     // Broadcast the message to all connected clients
+//     io.emit('chat message', message);
+//   });
+
+//   // Handle disconnect
+//   socket.on('disconnect', () => {
+//     console.log('User disconnected');
+//   });
+// });
+
+// const PORT = process.env.PORT || 5000;
+// server.listen(PORT, () => {
+//   console.log(`Server running on port ${PORT}`);
+// });
+
