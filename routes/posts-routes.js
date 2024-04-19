@@ -1,5 +1,6 @@
 const express = require('express')
 const { getPosts, getPost, createPost, deletePost, updatePost, getPrompt, clearPrompts } = require('../controllers/posts-controller');
+const requireAuth = require('../middleware/requireAuth')
 
 const postsRouter = express.Router();
 
