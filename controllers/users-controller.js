@@ -1,6 +1,11 @@
 const User = require('../models/users-model')
 const bcrypt = require('bcrypt')
 const validator = require('validator')
+const jwt = require('jsonwebtoken')
+
+const createToken = (_id) => {
+    return jwt.sign({_id}, process.env.SECRET, {expiresIn: '3d'})
+}
 
 // @route GET /api/users
 // @desc get all users
@@ -57,9 +62,9 @@ const signUp = async(req, res) => {
         const salt = await bcrypt.genSalt(10)
         const hash = await bcrypt.hash(password, salt)
 
-        const savedUser = await User.create({username, email, password: hash, pronounce, gender, sexualOrientation, location, interests, avatar, bio})
-
-        res.status(201).json(savedUser)
+        const newUser = await User.create({username, email, password: hash, pronounce, gender, sexualOrientation, location, interests, bio})
+        const token = createToken(newUser._id)
+        res.status(201).json({newUser, token})
 
     } catch (error) {
         res.status(400).json({error: error.message})
@@ -84,7 +89,8 @@ const logIn = async(req, res) => {
         if (!match) {
             throw Error('Incorrect password.')
         }
-        res.status(200).json({username, password})
+        const token = createToken(user._id)
+        res.status(200).json({user, token})
     } catch (error) {
         res.status(400).json({error: error.message})
     }

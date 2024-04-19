@@ -3,6 +3,8 @@ const { getPosts, getPost, createPost, deletePost, updatePost, getPrompt, clearP
 
 const postsRouter = express.Router();
 
+postsRouter.use(requireAuth)
+
 postsRouter.get('/', getPosts);
 postsRouter.get('/:postId', getPost);
 postsRouter.post('/', createPost);
