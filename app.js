@@ -33,12 +33,6 @@ app.use(cors({
 
 app.use(express.json())
 
-// test route to check if backend is connected
-app.get('/', (req, res) => {
-    res.status(200).json({ message: 'Connected to Backend!' });
-});
-
-
 // use routes
 app.use('/api/users', usersRouter);
 app.use('/api/posts', postsRouter);
@@ -59,51 +53,35 @@ mongoose.connect(MONGO_URI)
     .then(() => {
         const server = app.listen(process.env.PORT || 4000);
         console.log('Connected to DB and listening on port 4000')
-        const io = socket(server)
-        io.on("connection", () => {
-            console.log("Connected to socket.io")
+        const io = socket(server, {cors: {
+                origin: "*",
+                methods: ["GET", "POST"],
+                }})
+        io.on("connection", (socket) => {
+            console.log('made socket connection', socket.id);
+        
+            // Handle chat event
+            socket.on('chat', (data) => {
+                io.sockets.emit('chat', data);
+            });
+        
+            // Handle typing event
+            socket.on('typing', (data) => {
+                socket.broadcast.emit('typing', data);
+            })
+        
+            // Handle disconnection
+            socket.on('disconnect', () => {
+                console.log('Socket disconnected', socket.id);
+            });
         })
-    }
-    )
+    })
     .catch((error) => {
         console.log(error)
     })
 
 
-// Socket
-// Socket setup (server)
-const server = http.createServer(app);
-var io = socket(server, {
-  cors: {
-    origin: "*",
-    methods: ["GET", "POST"],
-  },
-});
 
-io.on('connection', (socket) => {
-
-    console.log('made socket connection', socket.id);
-
-    // Handle chat event
-    socket.on('chat', (data) => {
-        io.sockets.emit('chat', data);
-    });
-
-    // Handle typing event
-    socket.on('typing', (data) => {
-        socket.broadcast.emit('typing', data);
-    })
-
-});
-
-const PORT = process.env.PORT || 5000;
-server.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
-
-
-// const server = createServer(app);
-// const io = socket(server);
 
 // // event connection. function(client socket)
 // io.on('connection', (socket) => {
@@ -136,7 +114,7 @@ server.listen(PORT, () => {
 //   });
 // });
 
-// const PORT = process.env.PORT || 5000;
+// const PORT = process.env.PORT || 5001;
 // server.listen(PORT, () => {
 //   console.log(`Server running on port ${PORT}`);
 // });
