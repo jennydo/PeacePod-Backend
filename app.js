@@ -48,7 +48,7 @@ app.use('/api/chats', chatsRouter)
 app.use('/api/messages', messagesRouter)
 
 /// Get daily prompt
-cron.schedule("0 0 * * *", () => {
+cron.schedule("0 */15 * * *", () => {
     getNewPrompt()
 })
 
