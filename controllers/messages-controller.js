@@ -17,7 +17,7 @@ const sendMessage = async (req, res) => {
     try {
         var message = await Message.create(newMessage)
         message = await message.populate("sender", "username avatar")
-        // message = await message.populate("chat")
+        message = await message.populate("chat")
         // message = await User.populate(message, {
         //     path: "chat.users",
         //     select: "username avatar email"
