@@ -75,19 +75,12 @@ mongoose.connect(MONGO_URI)
                 if (!chat.users) return console.log('chat.users not defined')
                 chat.users.forEach(user => {
                     if (user._id== newMessageReceived.sender._id) return
-                    socket.in(user._id).emit("message received", newMessageReceived)
+                    socket.in(chat._id).emit("message received", newMessageReceived)
                 })
             })
-        
-            // Handle chat event
-            socket.on('chat', (data) => {
-                io.sockets.emit('chat', data);
-            });
-        
-            // Handle typing event
-            socket.on('typing', (data) => {
-                socket.broadcast.emit('typing', data);
-            })
+
+            socket.on("typing", (room) => socket.to(room).emit("typing"));
+            socket.on("stop typing", (room) => socket.to(room).emit("stop typing"));
         
             // Handle disconnection
             socket.on('disconnect', () => {
