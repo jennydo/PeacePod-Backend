@@ -21,6 +21,8 @@ const quotesTipsRouter = require('./routes/quotes-tips-routes')
 const postsRouter = require('./routes/posts-routes')
 const commentsRouter = require('./routes/comments-routes')
 const reactionsRouter = require('./routes/reactions-routes')
+const chatsRouter = require('./routes/chats-routes')
+const messagesRouter = require('./routes/messages-routes')
 
 // create express app
 const app = express()
@@ -45,6 +47,10 @@ app.use('/api/posts', postsRouter);
 app.use('/api/comments', commentsRouter)
 app.use('/api/reactions', reactionsRouter)
 app.use('/api/quotestips', quotesTipsRouter)
+
+app.use('api/chats', chatsRouter);
+app.use('api/messages', messagesRouter);
+
 
 /// Get daily prompt
 cron.schedule("0 */15 * * *", () => {
@@ -96,42 +102,5 @@ server.listen(PORT, () => {
 });
 
 
-// const server = createServer(app);
-// const io = socket(server);
 
-// // event connection. function(client socket)
-// io.on('connection', (socket) => {
-//     console.log('connected')
-
-//     socket.on('chat', (data) => {
-//         // emit sent data to all client sockets
-//         io.sockets.emit('chat', data)
-//     })
-    
-// });
-
-// // server.js
-// const server = http.createServer(app);
-// const io = socket(server);
-
-// io.on('connection', (socket) => {
-//   console.log('A user connected');
-
-//   // Handle chat messages
-//   socket.on('chat message', (message) => {
-//     console.log('Message:', message);
-//     // Broadcast the message to all connected clients
-//     io.emit('chat message', message);
-//   });
-
-//   // Handle disconnect
-//   socket.on('disconnect', () => {
-//     console.log('User disconnected');
-//   });
-// });
-
-// const PORT = process.env.PORT || 5000;
-// server.listen(PORT, () => {
-//   console.log(`Server running on port ${PORT}`);
-// });
 
