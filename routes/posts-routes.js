@@ -1,11 +1,16 @@
 const express = require('express')
-const { getPosts, getPost, createPost, deletePost, updatePost } = require('../controllers/posts-controller');
+const { getPosts, getPost, createPost, deletePost, updatePost, getPrompt, clearPrompts } = require('../controllers/posts-controller');
+const requireAuth = require('../middleware/requireAuth')
 
 const postsRouter = express.Router();
+
+postsRouter.use(requireAuth)
 
 postsRouter.get('/', getPosts);
 postsRouter.get('/:postId', getPost);
 postsRouter.post('/', createPost);
+postsRouter.post('/prompt', getPrompt)
+postsRouter.delete('/prompt', clearPrompts)
 postsRouter.delete('/:postId', deletePost);
 postsRouter.patch('/:postId', updatePost);
 
