@@ -9,11 +9,12 @@ const usersSchema = new mongoose.Schema({
     gender: { type: String, enum: usersGenders, required: true },
     sexualOrientation: [{ type: String, enum: usersSexualities, required: true }],
     location: { type: String, enum: usersLocations, required: true },
-    interests: [{ type: String, enum: usersInterests, required: true }],
+    interests: [{ type: String, enum: usersInterests }],
     avatar: {
         type: String, 
         default: "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg",
-    }
+    },
+    bio: { type: String, required: false, default: "" }
 })
 
 const usersModel = mongoose.model('User', usersSchema)

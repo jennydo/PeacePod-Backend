@@ -11,7 +11,7 @@ const getComments = async (req, res) => {
 
     let comments;
     try {
-        comments = await Comment.find({postId: req.params.postId}).sort({createdAt: -1});
+        comments = await Comment.find({postId: req.params.postId}).populate("userId", "username avatar email").sort({createdAt: 1}); // populate the userId field with the User object
     } catch (error) {
         return res.status(500).json({ error: "An error occurred while trying to retrieve the comments." });
     }
@@ -24,18 +24,18 @@ const getComments = async (req, res) => {
 // returns: comment
 const getComment = async (req, res) => {
     if (!req.params.commentId) {
-        return res.status(400).json({ error: "Comment not found." });
+        return res.status(400).json({ error: "Missing comment id." });
     }
 
     const id = req.params.commentId;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
-        return res.status(400).json({ error: "Comment not found." });
+        return res.status(400).json({ error: "Not a valid commenting id." });
     }
 
     let comment;
     try {
-        comment = await Comment.findById(id);
+        comment = await Comment.findById(id).populate("userId", "username avatar email");
     } catch (error) {
         return res.status(500).json({ error: "An error occurred while trying to retrieve the comment." });
     }
@@ -69,6 +69,7 @@ const createComment = async (req, res) => {
     let comment;
     try {
         comment = await Comment.create({ userId, postId: req.params.postId, content });
+        comment =  await comment.populate("userId")
     } catch (error) {
         return res.status(500).json({ error: "An error occurred while trying to create the comment." });
     }
