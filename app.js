@@ -46,8 +46,8 @@ app.use("/api/comments", commentsRouter);
 app.use("/api/reactions", reactionsRouter);
 app.use("/api/quotestips", quotesTipsRouter);
 
-app.use("api/chats", chatsRouter);
-app.use("api/messages", messagesRouter);
+app.use("/api/chats", chatsRouter);
+app.use("/api/messages", messagesRouter);
 
 /// Get daily prompt
 cron.schedule("0 */15 * * *", () => {
