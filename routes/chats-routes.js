@@ -5,12 +5,12 @@ const requireAuth = require('../middleware/requireAuth');
 const chatsRouter = express.Router();
 chatsRouter.use(requireAuth);
 
-chatsRouter.route("/").post(accessChat);
-chatsRouter.route("/").get(fetchChats);
-chatsRouter.route("/group").post(createGroupChat);
-chatsRouter.route("/rename").put(renameGroup);
-chatsRouter.route("/groupremove").put(removeFromGroup);
-chatsRouter.route("/groupadd").put(addToGroup);
+chatsRouter.post("/", accessChat);
+chatsRouter.get("/", fetchChats);
+chatsRouter.post("/group", createGroupChat);
+chatsRouter.put("/rename", renameGroup);
+chatsRouter.put("/groupremove", removeFromGroup);
+chatsRouter.put("/groupadd", addToGroup);
 
 
 module.exports = chatsRouter

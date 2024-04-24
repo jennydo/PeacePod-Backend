@@ -9,7 +9,7 @@ const messagesRouter = express.Router();
 messagesRouter.use(requireAuth);
 
 
-messagesRouter.route("/:chatId").get(allMessages);
-messagesRouter.route("/").post(sendMessage);
+messagesRouter.get("/:chatId", allMessages);
+messagesRouter.post("/", sendMessage);
 
 module.exports = messagesRouter;
