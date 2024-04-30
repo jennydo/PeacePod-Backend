@@ -1,9 +1,11 @@
 const express = require('express')
-const { getPosts, getPost, createPost, deletePost, updatePost, getPrompt } = require('../controllers/posts-controller');
+const { getPosts, getPost, createPost, deletePost, updatePost, getPrompt, clearPrompts } = require('../controllers/posts-controller');
+const requireAuth = require('../middleware/requireAuth')
 
 const postsRouter = express.Router();
 
-// get all posts
+postsRouter.use(requireAuth)
+
 postsRouter.get('/', getPosts);
 // get a post by id
 postsRouter.get('/:postId', getPost);
@@ -11,7 +13,7 @@ postsRouter.get('/:postId', getPost);
 postsRouter.post('/', createPost);
 // get a prompt
 postsRouter.post('/prompt', getPrompt)
-// delete a post
+postsRouter.delete('/prompt', clearPrompts)
 postsRouter.delete('/:postId', deletePost);
 // update a post
 postsRouter.patch('/:postId', updatePost);

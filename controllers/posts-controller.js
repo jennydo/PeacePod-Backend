@@ -55,12 +55,13 @@ const getPost = async (req, res) => {
 // @desc create a new normal post
 // @access Public
 const createPost = async (req, res) => {
-    // 
     if (!req.body || Object.keys(req.body).length === 0) {
         return res.status(400).json({ error: "Missing fields" });
     }
 
-    const {userId, title, content, isPrompt } = req.body;
+    const userId = req.user._id
+
+    const {title, content, isPrompt } = req.body;
 
     if (!userId || !title || !content || isPrompt === undefined) {
         return res.status(400).json({ error: "Missing fields" });
@@ -174,6 +175,19 @@ const deletePost = async (req, res) => {
     res.status(200).json(post);
 }
 
+// @route DELETE /posts/prompt
+// @desc delete all current prompts
+// @access Public
+const clearPrompts = async (req, res) => {
+    const title = "Prompt of the day"
+
+    const deletedPrompts = await Post.deleteMany({ title })
+
+    if (!deletedPrompts)
+        return res.status(404).json({ error: "Cannot delete all prompts"})
+    return res.status(201).json(deletedPrompts)
+}
 
 
-module.exports = { getPosts, getPost, createPost, deletePost, updatePost, getPrompt }
+
+module.exports = { getPosts, getPost, createPost, deletePost, updatePost, getPrompt, clearPrompts }
