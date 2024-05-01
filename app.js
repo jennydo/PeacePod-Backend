@@ -17,7 +17,8 @@ const usersRouter = require('./routes/users-routes')
 const quotesTipsRouter = require('./routes/quotes-tips-routes')
 const postsRouter = require('./routes/posts-routes')
 const commentsRouter = require('./routes/comments-routes')
-const reactionsRouter = require('./routes/reactions-routes')
+const reactionsRouter = require('./routes/reactions-routes');
+const { generatePrompt } = require('./utils/apis/getPromptOpenAI');
 
 // create express app
 const app = express()
@@ -44,9 +45,14 @@ app.use('/api/reactions', reactionsRouter)
 app.use('/api/quotestips', quotesTipsRouter)
 
 /// Get daily prompt
-cron.schedule("0 */15 * * *", () => {
-    getNewPrompt()
-})
+// cron.schedule("0 */15 * * *", () => {
+//     generatePrompt()
+// })
+// cron.schedule("*/5 * * * * *", () => {
+//     generatePrompt()
+//     console.log("hello")
+// })
+
 
 // connect to MongoDB
 const MONGO_URI = process.env.MONGO_URI;
