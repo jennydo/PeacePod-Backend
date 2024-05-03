@@ -22,14 +22,18 @@ spotifyRouter.post('/getAccessToken', async (req, res) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
-        'Authorization': 'Basic ' + (new Buffer.from(`${process.env.CLIENT_ID}:${process.env.CLIENT_SECRET}`).toString('base64'))
+        'Authorization': 'Basic ' + (Buffer.from(`${process.env.CLIENT_ID}:${process.env.CLIENT_SECRET}`).toString('base64'))
       },
       body: 'grant_type=client_credentials'
     });
     const data = await response.json();
-    const accessToken = data.access_token
-    console.log('acess token backend:', accessToken)
-    res.json({ accessToken })
+    if (response.ok) {
+        const accessToken = data.access_token;
+        console.log('Access token retrieved in backend:', accessToken); // Consider removing or masking for production
+        res.json({ accessToken });
+      } else {
+        throw new Error(data.error || 'Failed to retrieve access token');
+      }
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
