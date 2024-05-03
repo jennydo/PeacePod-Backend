@@ -6,15 +6,16 @@ const openai = new OpenAI()
 /// Generate a new prompt daily
 const generatePrompt = async () => {
     
-    const prompt = await openai.completions.create({
-        model: "gpt-3.5-turbo-instruct",
-        prompt: "Give me a short writing prompt for people with mental health issues. Keep it in one sentence only and within 30 tokens. The prompt could be in form of questions or sentences or fictions",
-
+    const prompt = await openai.chat.completions.create({
+        model: "gpt-4-turbo",
+        messages: [
+            {"role": "user", "content": "Give me a short writing prompt for people with mental health issues. Keep it in one sentence only and within 30 tokens. The prompt could be in form of questions or sentences or fictions"}
+        ],
         max_tokens: 30,
-        temperature: 0.8
+        temperature: 0.8 /// [0, 2] higher -> more random
       });
     
-    const promptContent = prompt.choices[0].text
+    const promptContent = prompt.choices[0].message.content
 
     const currentPrompt = await Prompt.findOne({})
     
@@ -39,14 +40,16 @@ const generateMeditationSession = async (requirements) => {
     const prompt = `Create a meditation session within the duration of ${duration} minutes, targeting person with the mood of ${mood}, using a tone of ${tone}. ${extraNotes? "Extra notes: " + extraNotes : ""}`
 
     try {
-        const completions = await openai.completions.create({
-            model: 'gpt-3.5-turbo-instruct',
-            prompt: prompt,
+        const completions = await openai.chat.completions.create({
+            model: 'gpt-4-turbo',
+            messages: [
+                { "role": "user", "content": prompt }
+            ],
             temperature: 0.5,
             max_tokens: 1000
         })
 
-        const session = completions.choices[0].text 
+        const session = completions.choices[0].message.content 
         // console.log("Session \n", session)
 
         return session
