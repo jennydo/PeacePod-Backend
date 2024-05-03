@@ -18,6 +18,7 @@ const quotesTipsRouter = require('./routes/quotes-tips-routes')
 const postsRouter = require('./routes/posts-routes')
 const commentsRouter = require('./routes/comments-routes')
 const reactionsRouter = require('./routes/reactions-routes')
+const spotifyRouter = require('./utils/apis/spotify')
 
 // create express app
 const app = express()
@@ -42,6 +43,7 @@ app.use('/api/posts', postsRouter);
 app.use('/api/comments', commentsRouter)
 app.use('/api/reactions', reactionsRouter)
 app.use('/api/quotestips', quotesTipsRouter)
+app.use('/api/spotify', spotifyRouter)
 
 /// Get daily prompt
 cron.schedule("0 */15 * * *", () => {
