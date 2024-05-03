@@ -18,7 +18,8 @@ const quotesTipsRouter = require('./routes/quotes-tips-routes')
 const postsRouter = require('./routes/posts-routes')
 const commentsRouter = require('./routes/comments-routes')
 const reactionsRouter = require('./routes/reactions-routes');
-const { generatePrompt } = require('./utils/apis/getPromptOpenAI');
+const meditationRouter = require('./routes/meditation-routes')
+const { generatePrompt, generateMeditationSession } = require('./utils/apis/openaiUtils');
 
 // create express app
 const app = express()
@@ -43,15 +44,16 @@ app.use('/api/posts', postsRouter);
 app.use('/api/comments', commentsRouter)
 app.use('/api/reactions', reactionsRouter)
 app.use('/api/quotestips', quotesTipsRouter)
+app.use('/api/meditation', meditationRouter)
 
-/// Get daily prompt
-// cron.schedule("0 */15 * * *", () => {
+// Get daily prompt
+// cron.schedule("0 0 * * *", () => {
 //     generatePrompt()
 // })
-// cron.schedule("*/5 * * * * *", () => {
-//     generatePrompt()
-//     console.log("hello")
-// })
+
+cron.schedule("*/1 * * * *", () => {
+    generatePrompt()
+})
 
 
 // connect to MongoDB

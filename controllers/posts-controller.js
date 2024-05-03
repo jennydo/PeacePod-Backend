@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const Comment = require('../models/comments-model');
 const promptsConstants = require('../constants/prompts')
 const PromptIndex = require('../models/promptIndex');
+const Prompt = require('../models/prompt-model')
 
 // @route GET /api/posts
 // @desc get all posts and sort by createdAt in descending order
@@ -80,12 +81,7 @@ const createPost = async (req, res) => {
 // @route POST /api/posts/prompt
 // @desc get a new prompt post and make current prompt normal post
 // @access Public
-const getPrompt = async (req, res) => {
-
-    const idxObj = await PromptIndex.find()
-    const idx = idxObj[0].current
-
-    const promptContent = promptsConstants[idx]
+const getPrompt = async (req, res) => {   
 
     const { userId } = req.body
 
@@ -98,13 +94,14 @@ const getPrompt = async (req, res) => {
     if (oldPrompt )
     {
         const updatedOldPrompt = await Post.findOneAndUpdate({ isPrompt: true }, { isPrompt: false }, { new: true })
-        // console.log("old and updated old ", oldPrompt, updatedOldPrompt)
+        console.log("old and updated old ", oldPrompt, updatedOldPrompt)
     }
 
     /// Create new prompt post in DB
     let prompt 
     try {
-        prompt = await Post.create({ userId, title: "Prompt of the day", content: promptContent, isPrompt: true })
+        const promptContent = await Prompt.findOne()
+        prompt = await Post.create({ userId, title: "Prompt of the day", content: promptContent.content, isPrompt: true })
         return res.status(201).json(prompt)
     } catch (error) {
         return res.status(404).json({ error })
