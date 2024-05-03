@@ -47,13 +47,13 @@ app.use('/api/quotestips', quotesTipsRouter)
 app.use('/api/meditation', meditationRouter)
 
 // Get daily prompt
-// cron.schedule("0 0 * * *", () => {
-//     generatePrompt()
-// })
-
-cron.schedule("*/1 * * * *", () => {
+cron.schedule("0 0 * * *", () => {
     generatePrompt()
 })
+
+// cron.schedule("*/5 * * * * *", () => {
+//     generatePrompt()
+// })
 
 
 // connect to MongoDB
