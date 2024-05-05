@@ -1,5 +1,5 @@
 const express = require('express');
-const spotifyRouter = express.Router();
+const SpotifyWebApi = require('spotify-web-api-node')
 
 const getAccessToken = async () => {
     const response = await fetch('https://accounts.spotify.com/api/token', {
@@ -21,13 +21,49 @@ const getAccessToken = async () => {
     // The response will return an access token valid for 1 hour
 };
 
-spotifyRouter.post('/getAccessToken', async (req, res) => {
-    try {
-    const accessToken = await getAccessToken();
-    res.json({ accessToken });
-    } catch (error) {
-      res.status(500).json({ error: error.message });
-    }
-  });
+const spotifyLogin = async (req, res) => {
+  const {code} = req.body;
+  const spotifyApi = new SpotifyWebApi({
+    redirectUri: process.env.REDIRECT_URI,
+    clientId: process.env.CLIENT_ID,
+    clientSecret: process.env.CLIENT_SECRET
+  })
 
-module.exports = spotifyRouter;
+  spotifyApi.authorizationCodeGrant(code)
+    .then(data => {
+      res.json({
+        accessToken: data.body.access_token,
+        refreshToken: data.body.refresh_token,
+        expiresIn: data.body.expires_in
+      })
+    })
+    .catch(err => {
+        res.status(400).json({ error: err.message })
+    })
+}
+
+const refreshToken = async (req, res) => {
+  const {refreshToken} = req.body;
+  const spotifyApi = new SpotifyWebApi({
+    redirectUri: process.env.REDIRECT_URI,
+    clientId: process.env.CLIENT_ID,
+    clientSecret: process.env.CLIENT_SECRET,
+    refreshToken
+  })
+
+  spotifyApi
+    .refreshAccessToken()
+    .then(data => {
+      // console.log('The access token has been refreshed!', data.body)
+      res.json({
+        accessToken: data.body.accessToken,
+        expiresIn: data.body.expiresIn,
+      })
+    })
+    .catch(err => {
+      console.log(err)
+      res.sendStatus(400)
+    })
+}
+
+module.exports = { getAccessToken, spotifyLogin, refreshToken}

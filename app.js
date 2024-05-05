@@ -18,7 +18,7 @@ const quotesTipsRouter = require('./routes/quotes-tips-routes')
 const postsRouter = require('./routes/posts-routes')
 const commentsRouter = require('./routes/comments-routes')
 const reactionsRouter = require('./routes/reactions-routes')
-const spotifyRouter = require('./utils/apis/spotify')
+const spotifyRouter = require('./routes/spotify-routes')
 
 // create express app
 const app = express()
