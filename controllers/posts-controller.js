@@ -91,17 +91,23 @@ const getPrompt = async (req, res) => {
     }
 
     const oldPrompt = await Post.findOne({ isPrompt: true })
-    if (oldPrompt )
+    if (oldPrompt)
     {
         const updatedOldPrompt = await Post.findOneAndUpdate({ isPrompt: true }, { isPrompt: false }, { new: true })
         console.log("old and updated old ", oldPrompt, updatedOldPrompt)
     }
 
+    const idxObj = await PromptIndex.find()
+    const idx = idxObj[0].current
+
+    const promptContent = promptsConstants[idx]
     /// Create new prompt post in DB
     let prompt 
     try {
-        const promptContent = await Prompt.findOne()
-        prompt = await Post.create({ userId, title: "Prompt of the day", content: promptContent.content, isPrompt: true })
+        // const promptContent = await Prompt.findOne()
+        // prompt = await Post.create({ userId, title: "Prompt of the day", content: promptContent.content, isPrompt: true })
+
+        prompt = await Post.create({ userId, title: "Prompt of the day", content: promptContent, isPrompt: true })
         return res.status(201).json(prompt)
     } catch (error) {
         return res.status(404).json({ error })
