@@ -24,27 +24,44 @@ const convertTextToAudio = async (textToConvert) => {
     const voiceId = 'piTKgcLEGmPE4e6mEKli'; // Nicole's voice
     const ELEVEN_LABS_API = `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`;
 
+    try {
+        const response = await axios.get(ELEVEN_LABS_API, {
+            headers: {
+                'X-Api-Key': QUOTES_API_KEY
+            },
+            body: {
+                text: "Hello PeacePod" //textToConvert,
+            },
+            // responseType: 'arraybuffer', 
+        })
+        const data = response.data;
+        res.json(data);
 
-    // API request options
-    const apiRequestOptions = {
-    method: 'POST',
-    url: ELEVEN_LABS_API,
-    headers: {
-        accept: 'audio/mpeg',
-        'content-type': 'application/json',
-        'xi-api-key': ELEVEN_LABS_API_KEY,
-    },
-    data: {
-        text: "Hello PeacePod" //textToConvert,
-      },
-      responseType: 'arraybuffer', 
+    } catch(error) {
+        res.status(500).json({ error: 'Failed to fetch quotes data from the API' });
     };
 
-    // Sending the API request and waiting for response
-    const apiResponse = await axios.request(apiRequestOptions);
 
-    // Return the binary audio data received from API
-    return apiResponse.data;
+    // // API request options
+    // const apiRequestOptions = {
+    // method: 'POST',
+    // url: ELEVEN_LABS_API,
+    // headers: {
+    //     accept: 'audio/mpeg',
+    //     'content-type': 'application/json',
+    //     'xi-api-key': ELEVEN_LABS_API_KEY,
+    // },
+    // data: {
+    //     text: "Hello PeacePod" //textToConvert,
+    //   },
+    //   responseType: 'arraybuffer', 
+    // };
+
+    // // Sending the API request and waiting for response
+    // const apiResponse = await axios.request(apiRequestOptions);
+
+    // // Return the binary audio data received from API
+    // return apiResponse.data;
 };
 
 module.exports = {convertTextToAudio};
