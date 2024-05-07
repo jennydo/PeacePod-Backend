@@ -27,7 +27,9 @@ const convertTextToAudio = async (textToConvert) => {
     try {
         const response = await axios.get(ELEVEN_LABS_API, {
             headers: {
-                'X-Api-Key': QUOTES_API_KEY
+                accept: 'audio/mpeg',
+                'content-type': 'application/json',
+                'xi-api-key': ELEVEN_LABS_API_KEY,
             },
             body: {
                 text: "Hello PeacePod" //textToConvert,
@@ -42,7 +44,7 @@ const convertTextToAudio = async (textToConvert) => {
     };
 
 
-    // // API request options
+    // API request options
     // const apiRequestOptions = {
     // method: 'POST',
     // url: ELEVEN_LABS_API,
