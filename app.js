@@ -48,11 +48,11 @@ app.use('/api/meditation', meditationRouter)
 
 // Get daily prompt
 cron.schedule("0 0 * * *", () => {
-    generatePrompt()
+    getNewPrompt()
 })
 
 // cron.schedule("*/5 * * * * *", () => {
-//     generatePrompt()
+//     getNewPrompt()
 // })
 
 
