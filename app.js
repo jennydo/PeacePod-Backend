@@ -55,10 +55,13 @@ app.use("/api/messages", messagesRouter);
 app.use('/api/spotify', spotifyRouter)
 
 /// Get daily prompt
+/// For final results, set to "0 0 * * * " (run at every 00:00). 
+/// Currently runs every 15 minutes for better testing
 cron.schedule("0 */15 * * *", () => {
   getNewPrompt();
 });
 
+/// For developing purposes, run every 5 seconds
 // cron.schedule("*/5 * * * * *", () => {
 //     getNewPrompt()
 // })
