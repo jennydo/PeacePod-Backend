@@ -90,25 +90,22 @@ const getPrompt = async (req, res) => {
         return res.status(404).json({ error: "userId is required"})
     }
 
-    const oldPrompt = await Post.findOne({ isPrompt: true })
-    if (oldPrompt)
-    {
-        const updatedOldPrompt = await Post.findOneAndUpdate({ isPrompt: true }, { isPrompt: false }, { new: true })
-        console.log("old and updated old ", oldPrompt, updatedOldPrompt)
-    }
-
-    const idxObj = await PromptIndex.find()
-    const idx = idxObj[0].current
-
-    const promptContent = promptsConstants[idx]
-    /// Create new prompt post in DB
-    let prompt 
     try {
-        // const promptContent = await Prompt.findOne()
-        // prompt = await Post.create({ userId, title: "Prompt of the day", content: promptContent.content, isPrompt: true })
+        const currentPrompt = await Post.findOne({ isPrompt: true })
 
-        prompt = await Post.create({ userId, title: "Prompt of the day", content: promptContent, isPrompt: true })
-        return res.status(201).json(prompt)
+        /// If after delete all the prompts, there are no prompt left in the DB -> need to create one here
+        if (!currentPrompt)
+        {
+            const idxObj = await PromptIndex.find()
+            const idx = idxObj[0].current
+            const promptContent = promptsConstants[idx]
+            const newPrompt = await Post.create({ userId, title: "Prompt of the day", content: promptContent, isPrompt: true })
+
+            return res.status(201).json(newPrompt)
+        }       
+        
+        /// Else if there is any prompt in DB, get from DB
+        return res.status(201).json(currentPrompt)
     } catch (error) {
         return res.status(404).json({ error })
     }
