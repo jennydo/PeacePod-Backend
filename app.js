@@ -22,7 +22,8 @@ const reactionsRouter = require('./routes/reactions-routes');
 const meditationRouter = require('./routes/meditation-routes')
 const chatsRouter = require("./routes/chats-routes");
 const messagesRouter = require("./routes/messages-routes");
-const spotifyRouter = require('./routes/spotify-routes')
+const spotifyRouter = require('./routes/spotify-routes');
+const voiceRouter = require("./routes/voice-routes");
 
 // create express app
 const app = express();
@@ -53,6 +54,7 @@ app.use("/api/chats", chatsRouter);
 app.use("/api/messages", messagesRouter);
 
 app.use('/api/spotify', spotifyRouter)
+app.use('/api/voice', voiceRouter)
 
 /// Get daily prompt
 /// For final results, set to "0 0 * * * " (run at every 00:00). 
