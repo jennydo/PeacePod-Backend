@@ -14,14 +14,16 @@ const cron = require("node-cron");
 const getNewPrompt = require("./utils/getDailyPrompt");
 
 // create routes
-const usersRouter = require("./routes/users-routes");
-const quotesTipsRouter = require("./routes/quotes-tips-routes");
-const postsRouter = require("./routes/posts-routes");
-const commentsRouter = require("./routes/comments-routes");
-const reactionsRouter = require("./routes/reactions-routes");
+const usersRouter = require('./routes/users-routes')
+const quotesTipsRouter = require('./routes/quotes-tips-routes')
+const postsRouter = require('./routes/posts-routes')
+const commentsRouter = require('./routes/comments-routes')
+const reactionsRouter = require('./routes/reactions-routes');
+const meditationRouter = require('./routes/meditation-routes')
 const chatsRouter = require("./routes/chats-routes");
 const messagesRouter = require("./routes/messages-routes");
 const spotifyRouter = require('./routes/spotify-routes')
+const voiceRouter = require("./routes/voice-routes");
 const cloudinaryRouter = require('./routes/cloudinary-routes')
 
 // create express app
@@ -42,22 +44,32 @@ app.get("/", (req, res) => {
 });
 
 // use routes
-app.use("/api/users", usersRouter);
-app.use("/api/posts", postsRouter);
-app.use("/api/comments", commentsRouter);
-app.use("/api/reactions", reactionsRouter);
-app.use("/api/quotestips", quotesTipsRouter);
+app.use('/api/users', usersRouter);
+app.use('/api/posts', postsRouter);
+app.use('/api/comments', commentsRouter)
+app.use('/api/reactions', reactionsRouter)
+app.use('/api/quotestips', quotesTipsRouter)
+app.use('/api/meditation', meditationRouter)
 
 app.use("/api/chats", chatsRouter);
 app.use("/api/messages", messagesRouter);
 
 app.use('/api/spotify', spotifyRouter)
 app.use('/api/cloudinary', cloudinaryRouter)
+app.use('/api/voice', voiceRouter)
 
 /// Get daily prompt
+/// For final results, set to "0 0 * * * " (run at every 00:00). 
+/// Currently runs every 15 minutes for better testing
 cron.schedule("0 */15 * * *", () => {
   getNewPrompt();
 });
+
+/// For developing purposes, run every 5 seconds
+// cron.schedule("*/5 * * * * *", () => {
+//     getNewPrompt()
+// })
+
 
 // connect to MongoDB
 const MONGO_URI = process.env.MONGO_URI;
