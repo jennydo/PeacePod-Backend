@@ -4,8 +4,8 @@ const SpotifyWebApi = require('spotify-web-api-node')
 const spotifyLogin = async (req, res) => {
     const { code } = req.body;
     const spotifyApi = new SpotifyWebApi({
-        redirectUri: process.env.REDIRECT_URI,
-        clientId: process.env.CLIENT_ID,
+        redirectUri: 'http://localhost:3000',
+        clientId: '4689c7fc29174c6d9523aca2473efe45',
         clientSecret: process.env.CLIENT_SECRET
     })
 
@@ -25,8 +25,8 @@ const spotifyLogin = async (req, res) => {
 const refreshToken = async (req, res) => {
     const { refreshToken } = req.body;
     const spotifyApi = new SpotifyWebApi({
-        redirectUri: process.env.REDIRECT_URI,
-        clientId: process.env.CLIENT_ID,
+        redirectUri: 'http://localhost:3000',
+        clientId: '4689c7fc29174c6d9523aca2473efe45',
         clientSecret: process.env.CLIENT_SECRET,
         refreshToken
     })
