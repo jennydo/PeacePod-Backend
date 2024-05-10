@@ -1,7 +1,9 @@
 const OpenAI = require('openai')
 const Prompt = require('../../models/prompt-model')
+const dotenv = require("dotenv");
+const env = dotenv.config();
 
-const openai = new OpenAI()
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY})
 
 /// Generate a new prompt daily
 const generatePrompt = async () => {
