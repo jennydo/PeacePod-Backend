@@ -1,8 +1,11 @@
 const express = require('express')
+const { getSession, createVoiceSession } = require('../controllers/meditation-controller')
+
+
 const meditationRouter = express.Router()
-const { getSession } = require('../controllers/meditation-controller')
 
 /// get a meditation session
 meditationRouter.post('/sessions', getSession)
+meditationRouter.post('/createVoice', createVoiceSession)
 
 module.exports = meditationRouter

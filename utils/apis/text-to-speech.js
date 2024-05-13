@@ -18,20 +18,22 @@ const convertTextToAudio = async (req, res) => {
             'content-type': 'application/json',
             'xi-api-key': apiKey,
         },
-        data: '{"text":"Hi PeacePod team, here is your meditation session.","voice_settings":{"stability":0.4,"similarity_boost":0.6}}',
+        data: {"text":"Hi PeacePod","voice_settings":{"stability":0.4,"similarity_boost":0.6}},
         responseType: 'arraybuffer', // Ensure Axios treats the response as binary data
     };
 
     try {
         // Sending the API request and waiting for response
         const apiResponse = await axios.request(apiRequestOptions);
-
+        
         // Set the appropriate content type for the response
         res.setHeader('Content-Type', 'audio/mpeg');
 
         // Send the binary audio data received from API
-        res.send(apiResponse.data);
+        res.send(apiResponse.data);    
+
     } catch (error) {
+        console.log("Elevenlabs API error")
         // Handle errors appropriately
         res.status(500).send(error.message);
     }
