@@ -33,9 +33,7 @@ const convertTextToAudio = async (req, res) => {
         res.send(apiResponse.data);    
 
     } catch (error) {
-        console.log("Elevenlabs API error")
-        // Handle errors appropriately
-        res.status(500).send(error.message);
+        console.log("Elevenlabs API error");
     }
 };
 
