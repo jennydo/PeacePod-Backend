@@ -1,8 +1,8 @@
 const cloudinary = require('cloudinary').v2;
           
 cloudinary.config({ 
-  cloud_name: 'di6doert4', 
-  api_key: '493556213944719', 
+  cloud_name: 'dufirricm', 
+  api_key: '237374651823171', 
   api_secret: process.env.CLOUDINARY_API_SECRET 
 });
 
@@ -18,7 +18,7 @@ cloudinary.config({
 
 const getCloudinaryImages = async (req, res) => {
     try {
-        const folder = 'PeacePod';
+        const folder = 'PeacePod/Backgrounds';
     
         const result = await cloudinary.search
           .expression(`folder:${folder}`)
