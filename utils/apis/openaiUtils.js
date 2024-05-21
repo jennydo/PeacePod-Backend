@@ -34,11 +34,10 @@ const generatePrompt = async () => {
 
   const currentPrompt = await Prompt.findOne({});
 
-  console.log("old prompt ", currentPrompt.content);
-
   let newPrompt;
   /// Already a prompt in DB -> update it
   if (currentPrompt) {
+    console.log("old prompt ", currentPrompt.content);
     newPrompt = await Prompt.findOneAndUpdate(
       {},
       { content: promptContent },
