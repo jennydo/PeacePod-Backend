@@ -27,7 +27,7 @@ const generatePrompt = async () => {
       },
     ],
     max_tokens: 30,
-    temperature: 0.8, /// [0, 2] higher -> more random
+    temperature: 1.2, /// [0, 2] higher -> more random
   });
 
   const promptContent = prompt.choices[0].message.content;
