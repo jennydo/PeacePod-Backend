@@ -63,7 +63,8 @@ app.use('/api/voice', voiceRouter)
 /// For final results, set to "0 0 * * * " (run at every 00:00). 
 /// Currently runs every 15 minutes for better testing
 cron.schedule("0 */15 * * *", () => {
-  getNewPrompt();
+  // getNewPrompt();
+  generatePrompt()
 });
 
 // For developing purposes, run every 5 seconds
