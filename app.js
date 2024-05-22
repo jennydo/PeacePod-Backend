@@ -24,7 +24,8 @@ const chatsRouter = require("./routes/chats-routes");
 const messagesRouter = require("./routes/messages-routes");
 const spotifyRouter = require('./routes/spotify-routes')
 const voiceRouter = require("./routes/voice-routes");
-const cloudinaryRouter = require('./routes/cloudinary-routes')
+const cloudinaryRouter = require('./routes/cloudinary-routes');
+const { generatePrompt } = require("./utils/apis/openaiUtils");
 
 // create express app
 const app = express();
@@ -62,12 +63,13 @@ app.use('/api/cloudinary', cloudinaryRouter)
 /// For final results, set to "0 0 * * * " (run at every 00:00). 
 /// Currently runs every 15 minutes for better testing
 cron.schedule("0 */15 * * *", () => {
-  getNewPrompt();
+  // getNewPrompt();
+  generatePrompt()
 });
 
-/// For developing purposes, run every 5 seconds
+// For developing purposes, run every 5 seconds
 // cron.schedule("*/5 * * * * *", () => {
-//     getNewPrompt()
+//     generatePrompt()
 // })
 
 
