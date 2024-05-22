@@ -4,7 +4,8 @@ const mongoose = require('mongoose');
 const Comment = require('../models/comments-model');
 const promptsConstants = require('../constants/prompts')
 const PromptIndex = require('../models/promptIndex');
-const Prompt = require('../models/prompt-model')
+const Prompt = require('../models/prompt-model');
+const { generatePrompt } = require('../utils/apis/openaiUtils');
 
 // @route GET /api/posts
 // @desc get all posts and sort by createdAt in descending order
@@ -91,15 +92,15 @@ const getPrompt = async (req, res) => {
     }
 
     try {
-        const currentPrompt = await Post.findOne({ isPrompt: true })
+        /// New format with OpenAI
+        const currentPrompt = await Prompt.findOne({})
 
         /// If after delete all the prompts, there are no prompt left in the DB -> need to create one here
         if (!currentPrompt)
         {
-            const idxObj = await PromptIndex.find()
-            const idx = idxObj[0].current
-            const promptContent = promptsConstants[idx]
-            const newPrompt = await Post.create({ userId, title: "Prompt of the day", content: promptContent, isPrompt: true })
+            /// New format with OpenAI
+            await generatePrompt()
+            const newPrompt = await Prompt.findOne({})
 
             return res.status(201).json(newPrompt)
         }       
@@ -110,6 +111,42 @@ const getPrompt = async (req, res) => {
         return res.status(404).json({ error })
     }
 }
+
+/// Olf format getPrompt
+// // @route POST /api/posts/prompt
+// // @desc get a new prompt post and make current prompt normal post
+// // @access Public
+// const getPrompt = async (req, res) => {   
+
+//     const { userId } = req.body
+
+//     if (!userId)
+//     {
+//         return res.status(404).json({ error: "userId is required"})
+//     }
+
+//     try {
+//         /// Old format with constants and index
+//         // const currentPrompt = await Post.findOne({ isPrompt: true })
+
+//         /// If after delete all the prompts, there are no prompt left in the DB -> need to create one here
+//         if (!currentPrompt)
+//         {
+            // // Old format, constants and idx
+            // const idxObj = await PromptIndex.find()
+            // const idx = idxObj[0].current
+            // const promptContent = promptsConstants[idx]
+            // const newPrompt = await Post.create({ userId, title: "Prompt of the day", content: promptContent, isPrompt: true })
+
+//             return res.status(201).json(newPrompt)
+//         }       
+        
+//         /// Else if there is any prompt in DB, get from DB
+//         return res.status(201).json(currentPrompt)
+//     } catch (error) {
+//         return res.status(404).json({ error })
+//     }
+// }
 
 // @route PATCH /api/posts/:postId
 // @desc update a post by id
