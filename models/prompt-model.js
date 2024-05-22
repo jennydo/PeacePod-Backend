@@ -5,7 +5,7 @@ const promptSchema = mongoose.Schema({
         type: String,
         require: true
     }
-})
+}, { timestamps: true })
 
 const promptModel = mongoose.model("Prompt", promptSchema)
 module.exports = promptModel
