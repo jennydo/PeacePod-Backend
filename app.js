@@ -56,7 +56,7 @@ app.use("/api/messages", messagesRouter);
 
 app.use('/api/spotify', spotifyRouter)
 app.use('/api/cloudinary', cloudinaryRouter)
-app.use('/api/voice', voiceRouter)
+//app.use('/api/voice', voiceRouter)
 
 /// Get daily prompt
 /// For final results, set to "0 0 * * * " (run at every 00:00). 
