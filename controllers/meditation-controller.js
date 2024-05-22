@@ -3,6 +3,7 @@ const axios = require('axios');
 const { generateMeditationSession } = require('../utils/apis/openaiUtils')
 const MeditationAudio = require('../models/meditation-audio-model');
 const Session = require('../models/sessions-model');
+const {convertTextToAudio} = require('../utils/apis/text-to-speech')
 
 
 // MEDITATION AUDIO
@@ -11,55 +12,29 @@ const createMeditationAudio = async (req, res) => {
     // Generate text using OpenAI API
     const { duration, mood, tone, extraNotes } = req.body
 
-    if (!duration || !mood || !tone)
-    {
-        return res.status(400).json({ error: "Missing fields."})
-    } 
+    if (!duration || !mood || !tone) {
+        return res.status(400).json({ error: "Missing fields." })
+    }
 
     let audioContent = "Hi PeacePod";
     try {
-        audioContent = await generateMeditationSession({ duration, mood, tone, extraNotes })   
-        console.log("meditation session content", session)
+        audioContent = await generateMeditationSession({ duration, mood, tone, extraNotes })
+        console.log("Meditation session content: ", audioContent)
     } catch (error) {
         // Handle errors appropriately
         res.status(500).send(error.message);
     }
 
-
-    // Generates voice session given the text input
-    // Set the API key for ElevenLabs API
-    const apiKey = process.env.ELEVEN_LABS_API_KEY;
-
-    // ID of voice: Natasha - gentle meditation
-    const voiceId = 'Atp5cNFg1Wj5gyKD7HWV';
-
-    // API request options
-    const apiRequestOptions = {
-        method: 'POST',
-        url: `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}?output_format=mp3_22050_32`,
-        headers: {
-            accept: 'audio/mpeg',
-            'content-type': 'application/json',
-            'xi-api-key': apiKey,
-        },
-        data: {"text":audioContent,"voice_settings":{"stability":0.4,"similarity_boost":0.6}},
-        responseType: 'arraybuffer', // Ensure Axios treats the response as binary data
-    };
+    const bodyAudioGeneration = {
+        "generatedText": audioContent
+    }
 
     try {
-        // Sending the API request and waiting for response
-        const apiResponse = await axios.request(apiRequestOptions);
-        
-        // Set the appropriate content type for the response
+        const audioResponse = await axios.post('http://localhost:4000/api/meditation/audios/text-to-audio', bodyAudioGeneration, { responseType: 'arraybuffer' });
         res.setHeader('Content-Type', 'audio/mpeg');
-
-        // Send the binary audio data received from API
-        res.send(apiResponse.data);    
-
+        res.send(audioResponse.data);
     } catch (error) {
-        console.log("Elevenlabs API error")
-        // Handle errors appropriately
-        res.status(400).send(error.message);
+        console.log('Audio Generation error:', error)
     }
 };
 
@@ -71,14 +46,14 @@ const getAllAudio = async (req, res) => {
     const { userId } = req.body;
 
     if (!userId) {
-      console.log("UserId param not sent with request");
-      return res.sendStatus(400);
+        console.log("UserId param not sent with request");
+        return res.sendStatus(400);
     }
 
 
     let allAudio;
     try {
-        allAudio = await MeditationAudio.find({userId: userId}).sort({createdAt: -1});
+        allAudio = await MeditationAudio.find({ userId: userId }).sort({ createdAt: -1 });
     } catch (error) {
         return res.status(500).json({ error: "Unable to get all audio" });
     }
@@ -128,7 +103,7 @@ const createSession = async (req, res) => {
 
     const userId = req.user._id
 
-    const {  uploadedBackgrounds, lastBackground, meditationAudio, music, isPlayingAudio } = req.body;
+    const { uploadedBackgrounds, lastBackground, meditationAudio, music, isPlayingAudio } = req.body;
 
     if (!userId || !uploadedBackgrounds || !lastBackground || isPlayingAudio === undefined) {
         return res.status(400).json({ error: "Missing fields" });
@@ -150,14 +125,14 @@ const getUserSession = async (req, res) => {
     const { userId } = req.body;
 
     if (!userId) {
-      console.log("UserId param not sent with request");
-      return res.sendStatus(400);
+        console.log("UserId param not sent with request");
+        return res.sendStatus(400);
     }
 
 
     let sessions;
     try {
-        sessions = await Session.find({userId: userId});
+        sessions = await Session.find({ userId: userId });
     } catch (error) {
         return res.status(500).json({ error: "Unable to get session" });
     }
@@ -175,14 +150,14 @@ const getUserLastSession = async (req, res) => {
     const { userId } = req.body;
 
     if (!userId) {
-      console.log("UserId param not sent with request");
-      return res.sendStatus(400);
+        console.log("UserId param not sent with request");
+        return res.sendStatus(400);
     }
 
 
     let lastSession;
     try {
-        lastSession = await Session.find({userId: userId})[-1];
+        lastSession = await Session.find({ userId: userId })[-1];
     } catch (error) {
         return res.status(500).json({ error: "Unable to get the last session" });
     }
