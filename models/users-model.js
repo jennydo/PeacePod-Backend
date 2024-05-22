@@ -29,7 +29,7 @@ const usersSchema = new mongoose.Schema({
         beardProbability: { type: Number, default: 0 },
         earrings: { type: [String], default: ["variant01"]},
         earringsProbability: { type: Number, default: 0 },
-        glass: { type: [String], default: ["variant01"]},
+        glasses: { type: [String], default: ["variant01"]},
         glassesProbability: { type: Number, default: 0 },
         hairAccessories: { type: [String], default: ["flowers"]},
         hairAccessoriesProbability: { type: Number, default: 0 },
