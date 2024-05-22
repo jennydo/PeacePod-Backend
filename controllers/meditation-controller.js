@@ -3,36 +3,60 @@ const axios = require('axios');
 const { generateMeditationSession } = require('../utils/apis/openaiUtils')
 const MeditationAudio = require('../models/meditation-audio-model');
 const Session = require('../models/sessions-model');
-const {convertTextToAudio} = require('../utils/apis/text-to-speech')
+const cloudinary = require('cloudinary').v2;
+const fs = require('fs');
 
+
+cloudinary.config({
+    cloud_name: 'dufirricm',
+    api_key: '237374651823171',
+    api_secret: process.env.CLOUDINARY_API_SECRET
+})
 
 // MEDITATION AUDIO
 // Create a meditation audio based on user request
 const createMeditationAudio = async (req, res) => {
     // Generate text using OpenAI API
-    const { duration, mood, tone, extraNotes } = req.body
+    // const { duration, mood, tone, extraNotes } = req.body
 
-    if (!duration || !mood || !tone) {
-        return res.status(400).json({ error: "Missing fields." })
-    }
+    // if (!duration || !mood || !tone) {
+    //     return res.status(400).json({ error: "Missing fields." })
+    // }
 
-    let audioContent = "Hi PeacePod";
-    try {
-        audioContent = await generateMeditationSession({ duration, mood, tone, extraNotes })
-        console.log("Meditation session content: ", audioContent)
-    } catch (error) {
-        // Handle errors appropriately
-        res.status(500).send(error.message);
-    }
+    // let audioContent = "Hi PeacePod";
+    // try {
+    //     audioContent = await generateMeditationSession({ duration, mood, tone, extraNotes })
+    //     console.log("Meditation session content: ", audioContent)
+    // } catch (error) {
+    //     // Handle errors appropriately
+    //     res.status(500).send(error.message);
+    // }
 
     const bodyAudioGeneration = {
-        "generatedText": audioContent
+        "generatedText": "Hi PeacePod"
     }
 
     try {
         const audioResponse = await axios.post('http://localhost:4000/api/meditation/audios/text-to-audio', bodyAudioGeneration, { responseType: 'arraybuffer' });
         res.setHeader('Content-Type', 'audio/mpeg');
+        // Send the binary audio data received from API
         res.send(audioResponse.data);
+
+        // Save the audio data to a temporary file
+        const tempFilePath = path.join(__dirname, '../assets/temp_audio.mp3');
+        fs.writeFileSync(tempFilePath, audioResponse.data);
+
+        // Upload the audio file to Cloudinary
+        const uploadResponse = await cloudinary.uploader.upload(tempFilePath, {
+            resource_type: 'auto',
+            folder: '/PeacePod'
+        });
+
+        // Delete the temporary file
+        fs.unlinkSync(tempFilePath);
+
+        console.log('Audio uploaded to Cloudinary:', uploadResponse);
+        res.status(200).json({ audioURL: uploadResponse.secure_url });
     } catch (error) {
         console.log('Audio Generation error:', error)
     }

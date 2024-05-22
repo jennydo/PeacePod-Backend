@@ -7,8 +7,8 @@ const convertTextToAudio = async (req, res) => {
     // Set the API key for ElevenLabs API
     const apiKey = process.env.ELEVEN_LABS_API_KEY;
 
-    // ID of voice: Natasha - gentle meditation
-    const voiceId = 'Atp5cNFg1Wj5gyKD7HWV';
+    // ID of voice: Nicole
+    const voiceId = 'piTKgcLEGmPE4e6mEKli';
 
     const { generatedText } = req.body
 
