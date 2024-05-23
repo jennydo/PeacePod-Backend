@@ -130,15 +130,15 @@ const createSession = async (req, res) => {
 
     const userId = req.user._id
 
-    const {  uploadedBackgrounds, lastBackground, meditationAudio, music, isPlayingAudio } = req.body;
+    const { lastBackground, meditationAudio, music, isPlayingAudio } = req.body;
 
-    if (!userId || !uploadedBackgrounds || !lastBackground || isPlayingAudio === undefined) {
+    if (!userId || !lastBackground || isPlayingAudio === undefined) {
         return res.status(400).json({ error: "Missing fields" });
     }
 
     let session;
     try {
-        session = await Session.create({ uploadedBackgrounds, lastBackground, meditationAudio, music, isPlayingAudio });
+        session = await Session.create({ userId, lastBackground, meditationAudio, music, isPlayingAudio });
     } catch (error) {
         return res.status(400).json({ error: error.message });
     }
