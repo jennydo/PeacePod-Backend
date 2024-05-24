@@ -65,10 +65,25 @@ const createMeditationAudio = async (req, res) => {
 };
 
 
+// Get all Audios
+const getAllAudio = async (req, res) => {
+    let allAudio;
+    try {
+        allAudio = await MeditationAudio.find({}).sort({createdAt: -1});
+    } catch (error) {
+        return res.status(500).json({ error: "Unable to get all audio" });
+    }
+
+    if (!allAudio || allAudio.length === 0) {
+        return res.status(404).json({ error: "No audio" });
+    }
+
+    res.status(200).json(allAudio);
+}
 
 
 // Get all Audios of the given user
-const getAllAudio = async (req, res) => {
+const getUserAllAudio = async (req, res) => {
     const { userId } = req.body;
 
     if (!userId) {
@@ -197,28 +212,4 @@ const getUserLastSession = async (req, res) => {
 
 
 
-
-
-
-// /// @route POST /api/meditation/sessions
-// /// @desc Get a new meditation session based on requests
-// /// @access Private
-// const getSession = async (req, res) => {
-//     const { duration, mood, tone, extraNotes } = req.body
-
-//     if (!duration || !mood || !tone)
-//     {
-//         return res.status(400).json({ error: "Missing fields."})
-//     }
-
-//     try {
-//         const session = await generateMeditationSession({ duration, mood, tone, extraNotes })   
-//         console.log("meditation session ", session)
-//         return res.status(201).json(session)     
-//     } catch (error) {
-//         return res.status(400).json({ error })
-//     }
-// }
-
-
-module.exports = { createMeditationAudio, getAllAudio, getAudio, createSession, getUserSession, getUserLastSession }
+module.exports = { createMeditationAudio, getAllAudio, getUserAllAudio, getAudio, createSession, getUserSession, getUserLastSession }
