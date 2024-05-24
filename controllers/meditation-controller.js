@@ -9,9 +9,9 @@ const Session = require('../models/sessions-model');
 // Create a meditation audio based on user request
 const createMeditationAudio = async (req, res) => {
     // Generate text using OpenAI API
-    const { duration, mood, tone, extraNotes } = req.body
+    const { title, duration, mood, tone, extraNotes } = req.body
 
-    if (!duration || !mood || !tone)
+    if (!title || !duration || !mood || !tone)
     {
         return res.status(400).json({ error: "Missing fields."})
     } 
