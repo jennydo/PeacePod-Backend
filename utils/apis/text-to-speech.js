@@ -7,7 +7,8 @@ const convertTextToAudio = async (req, res) => {
     const apiKey = process.env.ELEVEN_LABS_API_KEY;
 
     // ID of voice: Natasha - gentle meditation
-    const voiceId = 'Atp5cNFg1Wj5gyKD7HWV';
+    // Get all voices https://api.elevenlabs.io/v1/voices
+    const voiceId = 'piTKgcLEGmPE4e6mEKli';
 
     // API request options
     const apiRequestOptions = {
@@ -35,6 +36,7 @@ const convertTextToAudio = async (req, res) => {
 
     } catch (error) {
         console.log("Elevenlabs API error");
+        console.log(error.message)
     }
 };
 

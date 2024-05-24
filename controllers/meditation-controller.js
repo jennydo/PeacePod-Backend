@@ -19,10 +19,10 @@ const createMeditationAudio = async (req, res) => {
     let audioContent = "Hi PeacePod";
     try {
         audioContent = await generateMeditationSession({ duration, mood, tone, extraNotes })   
-        console.log("meditation session content", session)
+        console.log("meditation session content", audioContent)
     } catch (error) {
         // Handle errors appropriately
-        res.status(500).send(error.message);
+        return res.status(500).send(error.message);
     }
 
 
@@ -31,7 +31,8 @@ const createMeditationAudio = async (req, res) => {
     const apiKey = process.env.ELEVEN_LABS_API_KEY;
 
     // ID of voice: Natasha - gentle meditation
-    const voiceId = 'Atp5cNFg1Wj5gyKD7HWV';
+    // Get all voices https://api.elevenlabs.io/v1/voices
+    const voiceId = 'piTKgcLEGmPE4e6mEKli';
 
     // API request options
     const apiRequestOptions = {
