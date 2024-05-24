@@ -25,16 +25,16 @@ const convertTextToAudio = async (req, res) => {
     try {
         // Sending the API request and waiting for response
         const apiResponse = await axios.request(apiRequestOptions);
-
+        
         // Set the appropriate content type for the response
         res.setHeader('Content-Type', 'audio/mpeg'); // Set the response content type to audio in MPEG format
         // Note: MPEG format is a popular audio format that is widely supported by most browsers and media players
 
         // Send the binary audio data received from API
-        res.send(apiResponse.data);
+        res.send(apiResponse.data);    
+
     } catch (error) {
-        // Handle errors appropriately
-        res.status(500).send(error.message);
+        console.log("Elevenlabs API error");
     }
 };
 
