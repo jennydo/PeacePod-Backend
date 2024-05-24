@@ -70,7 +70,7 @@ const createMeditationAudio = async (req, res) => {
 
 // Get all Audios of the given user
 const getAllAudio = async (req, res) => {
-    const { userId } = req.body;
+    const userId = req.user._id
 
     if (!userId) {
       console.log("UserId param not sent with request");
@@ -83,10 +83,6 @@ const getAllAudio = async (req, res) => {
         allAudio = await MeditationAudio.find({userId: userId}).sort({createdAt: -1});
     } catch (error) {
         return res.status(500).json({ error: "Unable to get all audio" });
-    }
-
-    if (!allAudio || allAudio.length === 0) {
-        return res.status(404).json({ error: "No audio" });
     }
 
     res.status(200).json(allAudio);
