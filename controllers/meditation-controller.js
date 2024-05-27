@@ -4,7 +4,6 @@ const { generateMeditationSession } = require('../utils/apis/openaiUtils')
 const MeditationAudio = require('../models/meditation-audio-model');
 const Session = require('../models/sessions-model');
 const cloudinary = require('cloudinary').v2;
-const fs = require('fs');
 
 
 cloudinary.config({
@@ -17,51 +16,62 @@ cloudinary.config({
 // Create a meditation audio based on user request
 const createMeditationAudio = async (req, res) => {
     // Generate text using OpenAI API
-    // const { duration, mood, tone, extraNotes } = req.body
+    const { title, duration, mood, tone, extraNotes } = req.body
 
-    // if (!duration || !mood || !tone) {
-    //     return res.status(400).json({ error: "Missing fields." })
-    // }
+    if (!duration || !mood || !tone) {
+        return res.status(400).json({ error: "Missing fields." })
+    }
 
-    // let audioContent = "Hi PeacePod";
-    // try {
-    //     audioContent = await generateMeditationSession({ duration, mood, tone, extraNotes })
-    //     console.log("Meditation session content: ", audioContent)
-    // } catch (error) {
-    //     // Handle errors appropriately
-    //     res.status(500).send(error.message);
-    // }
+    // Validate title for a valid MP3 filename
+    if (!title || /[/\\:*?"<>|]/.test(title)) {
+        return res.status(400).json({ error: "Invalid or missing title for MP3 filename." });
+    }
+
+    if (title.length > 255) {
+        return res.status(400).json({ error: "Title is too long." });
+    }
+
+    let audioContent = "Hi PeacePod";
+    try {
+        audioContent = await generateMeditationSession({ duration, mood, tone, extraNotes })
+        console.log("Meditation session content: ", audioContent)
+    } catch (error) {
+        // Handle errors appropriately
+        res.status(500).send(error.message);
+    }
 
     const bodyAudioGeneration = {
-        "generatedText": "Hi PeacePod"
+        "generatedText": audioContent
     }
 
     try {
+        // Generate audio data from your local server
         const audioResponse = await axios.post('http://localhost:4000/api/meditation/audios/text-to-audio', bodyAudioGeneration, { responseType: 'arraybuffer' });
-        res.setHeader('Content-Type', 'audio/mpeg');
-        // Send the binary audio data received from API
-        res.send(audioResponse.data);
 
-        // Save the audio data to a temporary file
-        const tempFilePath = path.join(__dirname, '../assets/temp_audio.mp3');
-        fs.writeFileSync(tempFilePath, audioResponse.data);
+        // Convert arraybuffer to a readable stream, required by Cloudinary
+        // Thanh note: A buffer is a temporary storage location for data while it is being moved from one place to another
+        const audioStream = Buffer.from(audioResponse.data);
 
-        // Upload the audio file to Cloudinary
-        const uploadResponse = await cloudinary.uploader.upload(tempFilePath, {
-            resource_type: 'auto',
-            folder: '/PeacePod'
+        // Upload audio to Cloudinary
+        const cloudinaryResponse = await cloudinary.uploader.upload_stream({
+            resource_type: 'video', // Use 'video' resource type for audio files
+            folder: 'PeacePod/Audios-Users', // Specify your target folder
+            public_id: title
+        }, (error, result) => {
+            if (error) return res.status(500).json({ error: error.message });
+            // Successfully uploaded to Cloudinary
+            console.log('Uploaded file URL:', result.url);
+            res.json({ File: title, url: result.url });
         });
 
-        // Delete the temporary file
-        fs.unlinkSync(tempFilePath);
+        // Pipe audio stream to Cloudinary upload
+        const streamUpload = cloudinaryResponse.end(audioStream);
 
-        console.log('Audio uploaded to Cloudinary:', uploadResponse);
-        res.status(200).json({ audioURL: uploadResponse.secure_url });
     } catch (error) {
-        console.log('Audio Generation error:', error)
+        console.log('Audio generation or upload error:', error);
+        res.status(500).send(error.message);
     }
 };
-
 
 
 
