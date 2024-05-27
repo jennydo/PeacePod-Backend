@@ -32,22 +32,20 @@ const generatePrompt = async () => {
 
   const promptContent = prompt.choices[0].message.content;
 
-  const currentPrompt = await Prompt.findOne({});
+  // /// For debuggin only
+  // const allPrompts = await Prompt.find()
+  // if (allPrompts)
+  // {
+  //   const oldPrompt = allPrompts[allPrompts.length - 1]
+  //   console.log("Old prompt", oldPrompt.content)
+  // }
 
   let newPrompt;
-  /// Already a prompt in DB -> update it
-  if (currentPrompt) {
-    console.log("old prompt ", currentPrompt.content);
-    newPrompt = await Prompt.findOneAndUpdate(
-      {},
-      { content: promptContent },
-      { new: true }
-    );
-  } else {
-    /// No prompt in DB yet
-    newPrompt = await Prompt.create({ content: promptContent });
-  }
+  /// Create a new prompt in DB
+  newPrompt = await Prompt.create({ content: promptContent });
   console.log("new prompt ", newPrompt.content);
+
+  return newPrompt
 };
 
 /// Generate meditation session
