@@ -17,6 +17,6 @@ const promptResponseSchema = mongoose.Schema({
     }
 }, { timestamps: true })
 
-const promptResponseModel = mongoose.Model('PromptResponse', promptResponseSchema)
+const promptResponseModel = mongoose.model('PromptResponse', promptResponseSchema)
 
 module.exports = promptResponseModel
