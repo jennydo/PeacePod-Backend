@@ -77,28 +77,24 @@ const createMeditationAudio = async (req, res) => {
 
 // Get all Audios of the given user
 const getAllAudio = async (req, res) => {
-    const { userId } = req.body;
+    const userId = req.user._id;
 
     if (!userId) {
         console.log("UserId param not sent with request");
         return res.sendStatus(400);
     }
 
-
     let allAudio;
     try {
-        allAudio = await MeditationAudio.find({ userId: userId }).sort({ createdAt: -1 });
+        allAudio = await MeditationAudio.find({ userId: userId }).sort({
+            createdAt: -1,
+        });
     } catch (error) {
         return res.status(500).json({ error: "Unable to get all audio" });
     }
 
-    if (!allAudio || allAudio.length === 0) {
-        return res.status(404).json({ error: "No audio" });
-    }
-
     res.status(200).json(allAudio);
-}
-
+};
 
 // Get one Audio
 const getAudio = async (req, res) => {
@@ -124,9 +120,7 @@ const getAudio = async (req, res) => {
     }
 
     res.status(200).json(audio);
-}
-
-
+};
 
 // SESSION
 // Create Session
@@ -135,34 +129,40 @@ const createSession = async (req, res) => {
         return res.status(400).json({ error: "Missing fields" });
     }
 
-    const userId = req.user._id
+    const userId = req.user._id;
 
     const { uploadedBackgrounds, lastBackground, meditationAudio, music, isPlayingAudio } = req.body;
 
-    if (!userId || !uploadedBackgrounds || !lastBackground || isPlayingAudio === undefined) {
+    if (!userId || !lastBackground || isPlayingAudio === undefined) {
         return res.status(400).json({ error: "Missing fields" });
     }
 
     let session;
     try {
-        session = await Session.create({ uploadedBackgrounds, lastBackground, meditationAudio, music, isPlayingAudio });
+        session = await Session.create({
+            userId,
+            lastBackground,
+            meditationAudio,
+            music,
+            isPlayingAudio,
+        });
     } catch (error) {
         return res.status(400).json({ error: error.message });
     }
 
     res.status(201).json(session);
-}
-
+};
 
 // Get User Session
 const getUserSession = async (req, res) => {
-    const { userId } = req.body;
+    // const { userId } = req.body;
 
-    if (!userId) {
-        console.log("UserId param not sent with request");
-        return res.sendStatus(400);
-    }
+    // if (!userId) {
+    //   console.log("UserId param not sent with request");
+    //   return res.sendStatus(400);
+    // }
 
+    const userId = req.user._id;
 
     let sessions;
     try {
@@ -176,22 +176,24 @@ const getUserSession = async (req, res) => {
     }
 
     res.status(200).json(sessions);
-}
-
+};
 
 // Get User Last Session
 const getUserLastSession = async (req, res) => {
-    const { userId } = req.body;
+    //   const { userId } = req.body;
 
-    if (!userId) {
-        console.log("UserId param not sent with request");
-        return res.sendStatus(400);
-    }
+    //   if (!userId) {
+    //     console.log("UserId param not sent with request");
+    //     return res.sendStatus(400);
+    //   }
 
+    const userId = req.user._id;
 
     let lastSession;
     try {
-        lastSession = await Session.find({ userId: userId })[-1];
+        const allSessions = await Session.find({ userId }).populate('meditationAudio');
+        lastSession = allSessions[allSessions.length - 1]
+
     } catch (error) {
         return res.status(500).json({ error: "Unable to get the last session" });
     }
@@ -201,12 +203,7 @@ const getUserLastSession = async (req, res) => {
     }
 
     res.status(200).json(lastSession);
-}
-
-
-
-
-
+};
 
 // /// @route POST /api/meditation/sessions
 // /// @desc Get a new meditation session based on requests
@@ -220,13 +217,19 @@ const getUserLastSession = async (req, res) => {
 //     }
 
 //     try {
-//         const session = await generateMeditationSession({ duration, mood, tone, extraNotes })   
+//         const session = await generateMeditationSession({ duration, mood, tone, extraNotes })
 //         console.log("meditation session ", session)
-//         return res.status(201).json(session)     
+//         return res.status(201).json(session)
 //     } catch (error) {
 //         return res.status(400).json({ error })
 //     }
 // }
 
-
-module.exports = { createMeditationAudio, getAllAudio, getAudio, createSession, getUserSession, getUserLastSession }
+module.exports = {
+    createMeditationAudio,
+    getAllAudio,
+    getAudio,
+    createSession,
+    getUserSession,
+    getUserLastSession,
+};

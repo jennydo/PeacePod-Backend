@@ -49,7 +49,7 @@ const getComment = async (req, res) => {
 
 // create a new comment for a specific post
 // params: postId
-// body: userId, content
+// body: content
 // returns: comment
 const createComment = async (req, res) => {
     if (!req.params.postId) {
@@ -60,7 +60,9 @@ const createComment = async (req, res) => {
         return res.status(400).json({ error: "Your comment creation has error" });
     }
 
-    const { userId, content } = req.body;
+    const userId = req.user._id
+
+    const { content } = req.body;
 
     if (!userId || !content) {
         return res.status(400).json({ error: "Your comment creation has error" });

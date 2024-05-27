@@ -2,8 +2,12 @@ const express = require('express')
 const { createMeditationAudio, getAllAudio, getAudio, createSession, getUserSession, getUserLastSession } = require('../controllers/meditation-controller')
 //testing TextToAudio
 const {convertTextToAudio} = require('../utils/apis/text-to-speech')
+const requireAuth = require('../middleware/requireAuth')
+
 
 const meditationRouter = express.Router()
+
+meditationRouter.use(requireAuth)
 
 /// get a meditation session
 //meditationRouter.post('/sessions', getSession)
