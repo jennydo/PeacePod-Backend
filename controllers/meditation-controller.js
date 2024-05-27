@@ -41,17 +41,17 @@ const createMeditationAudio = async (req, res) => {
     }
 
     const bodyAudioGeneration = {
-        "generatedText": audioContent
+        "generatedText": "Hi PeacePod"
     }
 
     try {
         // Generate audio data from your local server
-        const audioResponse = await axios.post('http://localhost:4000/api/meditation/audios/text-to-audio', bodyAudioGeneration, { responseType: 'arraybuffer' });
-
+        const audioResponse = await axios.post('http://localhost:4000/api/meditation/audios/text-to-audio', bodyAudioGeneration, { responseType: 'arraybuffer' , headers: { "Authorization": `Bearer ${req.usertoken}`}});
+        console.log(' audio res')
         // Convert arraybuffer to a readable stream, required by Cloudinary
         // Thanh note: A buffer is a temporary storage location for data while it is being moved from one place to another
         const audioStream = Buffer.from(audioResponse.data);
-
+        console.log('audio stream')
         // Upload audio to Cloudinary
         const cloudinaryResponse = await cloudinary.uploader.upload_stream({
             resource_type: 'video', // Use 'video' resource type for audio files
@@ -63,6 +63,8 @@ const createMeditationAudio = async (req, res) => {
             console.log('Uploaded file URL:', result.url);
             res.json({ File: title, url: result.url });
         });
+
+        console.log('done uploading')
 
         // Pipe audio stream to Cloudinary upload
         const streamUpload = cloudinaryResponse.end(audioStream);
