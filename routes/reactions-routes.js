@@ -1,7 +1,10 @@
 const express = require('express')
 const { createReaction, deleteReaction,countReactions, getUsersReacted, isReacted } = require('../controllers/reactions-controller');
+const requireAuth = require('../middleware/requireAuth');
 
 const reactionsRouter = express.Router();
+
+reactionsRouter.use(requireAuth);
 
 // get all users who reacted to a post
 reactionsRouter.get('/users/:postId', getUsersReacted);
