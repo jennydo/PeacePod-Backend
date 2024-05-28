@@ -55,7 +55,7 @@ const generateMeditationSession = async (requirements) => {
   const { duration, mood, tone, extraNotes } = requirements;
   const prompt = `Create a meditation session within the duration of ${duration} minutes, targeting person with the mood of ${mood}, using a tone of ${tone}. ${
     extraNotes ? "Extra notes: " + extraNotes : ""
-  }`;
+  }. Just give me the content of the scripts without any instruction like **Introduction**.`;
 
   try {
     const completions = await openai.chat.completions.create({
