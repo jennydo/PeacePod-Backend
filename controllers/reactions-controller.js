@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 
 // Create a new reaction on specified post
 // params: postId
-// body: userId
 const createReaction = async (req, res) => {
     if (!req.params.postId) {
         return res.status(400).json({ error: "Post not found." });
@@ -13,10 +12,10 @@ const createReaction = async (req, res) => {
         return res.status(400).json({ error: "Your reaction creation has error" });
     }
 
-    const { userId } = req.body;
+    const userId = req.user._id
 
     if (!userId) {
-        return res.status(400).json({ error: "Your reaction creation has error" });
+        return res.status(400).json({ error: "Your user is not authorized." });
     }
 
     let savedReaction;
@@ -34,7 +33,6 @@ const createReaction = async (req, res) => {
 
 // Delete a reaction on specified post
 // params: postId
-// body: userId
 // returns: reactionDeleted
 const deleteReaction = async (req, res) => {
     if (!req.params.postId) {
@@ -45,10 +43,10 @@ const deleteReaction = async (req, res) => {
         return res.status(400).json({ error: "Your reaction deletion has error" });
     }
 
-    const { userId } = req.body;
+    const userId = req.user._id
 
     if (!userId) {
-        return res.status(400).json({ error: "Your reaction deletion has error" });
+        return res.status(400).json({ error: "Your user is not authorized." });
     }
 
     let reactionDeleted
@@ -105,7 +103,6 @@ const getUsersReacted = async (req, res) => {
 
 // Check if a user has reacted to a post
 // params: postId
-// body: userId
 // returns: boolean
 const isReacted = async (req, res) => {
     if (!req.params.postId) {
@@ -116,10 +113,10 @@ const isReacted = async (req, res) => {
         return res.status(400).json({ error: "Your reaction check has error" });
     }
 
-    const { userId } = req.body;
+    const userId = req.user._id
 
     if (!userId) {
-        return res.status(400).json({ error: "Your reaction check has error" });
+        return res.status(400).json({ error: "Your user is not authorized." });
     }
 
     let reaction;
