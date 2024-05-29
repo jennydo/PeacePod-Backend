@@ -15,7 +15,7 @@ promptResponseRouter.use(requireAuth)
 promptResponseRouter.get('/prompt/:promptId', getPromptResponses)
 promptResponseRouter.get('/:responseId', getPromptResponse)
 promptResponseRouter.post('/:promptId', createPromptResponse)
-promptResponseRouter.patch('/:id', updatePromptResponse)
-promptResponseRouter.delete('/:id', deletePromptResponse)
+promptResponseRouter.patch('/:responseId', updatePromptResponse)
+promptResponseRouter.delete('/:responseId', deletePromptResponse)
 
 module.exports = promptResponseRouter;
