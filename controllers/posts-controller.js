@@ -13,7 +13,7 @@ const { generatePrompt } = require('../utils/apis/openaiUtils');
 const getPosts = async (req, res) => {
     let posts;
     try {
-        posts = await Post.find({}).sort({createdAt: -1});
+        posts = await Post.find({}).sort({createdAt: -1}).populate('userId', 'username avatar avatarData');
     } catch (error) {
         return res.status(500).json({ error: "An error occurred while trying to retrieve the posts." });
     }
@@ -41,7 +41,7 @@ const getPost = async (req, res) => {
 
     let post;
     try {
-        post = await Post.findById(id);
+        post = await Post.findById(id).populate('userId', 'username avatar avatarData');
     } catch (error) {
         return res.status(500).json({ error: "An error occurred while trying to retrieve the post." });
     }
