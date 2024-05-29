@@ -31,18 +31,18 @@ const getPromptResponses = async (req, res) => {
 // @params: prompt response id
 // @access Private
 const getPromptResponse = async (req, res) => {
-  const { promptId } = req.params;
+  const { responseId } = req.params;
 
-  if (!promptId)
-    return res.status(400).json({ error: "Prompt id is required" });
+  if (!responseId)
+    return res.status(400).json({ error: "Prompt response id is required" });
 
-  if (!mongoose.Types.ObjectId.isValid(promptId)) {
+  if (!mongoose.Types.ObjectId.isValid(responseId)) {
     return res.status(400).json({ error: "Not a valid promptResponseing id." });
   }
 
   let promptResponse;
   try {
-    promptResponse = await PromptResponse.findById(promptId)
+    promptResponse = await PromptResponse.findById(responseId)
       .populate("userId", "username avatar email")
       .populate("promptId");
 
@@ -104,23 +104,23 @@ const createPromptResponse = async (req, res) => {
   }
 };
 
-// @route DELETE /promptReponses/:promptId
+// @route DELETE /promptReponses/:responseId
 // @description: delete a specific promptResponse by its id
 // @params: promptResponseId
 // @access Private
 const deletePromptResponse = async (req, res) => {
-  const { promptId } = req.params.promptId;
+  const { responseId } = req.params;
 
-  if (!promptId)
+  if (!responseId)
     return res.status(400).json({ error: "Prompt id is required" });
 
-  if (!mongoose.Types.ObjectId.isValid(promptId)) {
+  if (!mongoose.Types.ObjectId.isValid(responseId)) {
     return res.status(400).json({ error: "PromptResponse not found." });
   }
 
   let promptResponse;
   try {
-    promptResponse = await PromptResponse.findByIdAndDelete(promptId);
+    promptResponse = await PromptResponse.findByIdAndDelete(responseId);
     if (!promptResponse) {
       return res.status(404).json({ error: "PromptResponse not found." });
     }
@@ -132,24 +132,24 @@ const deletePromptResponse = async (req, res) => {
   }
 };
 
-// @route PATCH /promptReponses/:promptId
+// @route PATCH /promptReponses/:responseId
 // @description: update a specific promptResponse by its id
 // @params: promptResponseId
 // @access Private
 const updatePromptResponse = async (req, res) => {
-  const { promptId } = req.params.promptId;
+  const { responseId } = req.params;
 
-  if (!promptId)
+  if (!responseId)
     return res.status(400).json({ error: "Prompt id is required" });
 
-  if (!mongoose.Types.ObjectId.isValid(promptId)) {
+  if (!mongoose.Types.ObjectId.isValid(responseId)) {
     return res.status(400).json({ error: "PromptResponse not found." });
   }
 
   let promptResponse;
   try {
     promptResponse = await PromptResponse.findByIdAndUpdate(
-      promptId,
+      responseId,
       req.body,
       {
         new: true,
