@@ -59,7 +59,7 @@ app.use("/api/messages", messagesRouter);
 app.use('/api/spotify', spotifyRouter)
 app.use('/api/cloudinary', cloudinaryRouter)
 
-app.use('/api/promptReponses', promptResponseRouter)
+app.use('/api/promptResponses', promptResponseRouter)
 //app.use('/api/voice', voiceRouter)
 
 /// Get daily prompt
