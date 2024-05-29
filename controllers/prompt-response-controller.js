@@ -15,9 +15,9 @@ const getPromptResponses = async (req, res) => {
   let promptResponses;
   try {
     promptResponses = await PromptResponse.find({ promptId })
-      .populate("userId", "username avatar email")
-      .populate("promptId")
-      .sort({ createdAt: 1 }); // populate the userId field with the User object
+      // .populate("userId", "username avatar email")
+      // .populate("promptId")
+      .sort({ createdAt: -1 });
     return res.status(201).json(promptResponses);
   } catch (error) {
     return res.status(500).json({
@@ -92,9 +92,8 @@ const createPromptResponse = async (req, res) => {
       content,
     });
 
-    promptResponse = await promptResponse.populate("userId")
-    promptResponse = await promptResponse.populate("promptId")
-    // console.log(promptResponse);
+    // promptResponse = await promptResponse.populate("userId")
+    // promptResponse = await promptResponse.populate("promptId")
 
     return res.status(200).json(promptResponse);
   } catch (error) {
