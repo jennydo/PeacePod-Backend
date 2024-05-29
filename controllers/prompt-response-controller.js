@@ -1,3 +1,4 @@
+const Prompt = require("../models/prompt-model");
 const PromptResponse = require("../models/prompt-response-model");
 const mongoose = require("mongoose");
 
@@ -13,17 +14,16 @@ const getPromptResponses = async (req, res) => {
 
   let promptResponses;
   try {
-    promptResponses = await PromptResponse.find({ promptId: promptId })
+    promptResponses = await PromptResponse.find({ promptId })
       .populate("userId", "username avatar email")
       .populate("promptId")
       .sort({ createdAt: 1 }); // populate the userId field with the User object
+    return res.status(201).json(promptResponses);
   } catch (error) {
     return res.status(500).json({
-      error: "An error occurred while trying to retrieve the promptResponses.",
+      error,
     });
   }
-
-  res.status(200).json(promptResponses);
 };
 
 // @route GET /promptReponses/:responseId
@@ -45,40 +45,44 @@ const getPromptResponse = async (req, res) => {
     promptResponse = await PromptResponse.findById(promptId)
       .populate("userId", "username avatar email")
       .populate("promptId");
+
+    if (!promptResponse) {
+      return res.status(404).json({ error: "PromptResponse not found." });
+    }
+
+    return res.status(200).json(promptResponse);
   } catch (error) {
     return res.status(500).json({
-      error: "An error occurred while trying to retrieve the promptResponse.",
+      error,
     });
   }
-
-  if (!promptResponse) {
-    return res.status(404).json({ error: "PromptResponse not found." });
-  }
-
-  res.status(200).json(promptResponse);
 };
 
 // @route POST /promptReponses/:promptId
 // @description: create a new promptResponse for a specific post
 // @params: promptId
+// @body: content
 // @access Private
 const createPromptResponse = async (req, res) => {
-  const { promptId } = req.params.promptId;
+  const { promptId } = req.params;
 
   if (!promptId)
     return res.status(400).json({ error: "Prompt id is required" });
 
   if (!req.body || Object.keys(req.body).length === 0) {
-    return res
-      .status(400)
-      .json({ error: "Your promptResponse creation has error" });
-  }
-
-  const { userId, content } = req.body;
-
-  if (!userId || !content) {
     return res.status(400).json({ error: "Missing fields" });
   }
+
+  const userId = req.user._id;
+  const { content } = req.body;
+
+  if (!content) {
+    return res.status(400).json({ error: "Response content cannot be empty" });
+  }
+
+  const prompt = await Prompt.findById(promptId);
+
+  if (!prompt) return res.status(400).json({ error: "Prompt not found" });
 
   let promptResponse;
   try {
@@ -87,13 +91,15 @@ const createPromptResponse = async (req, res) => {
       promptId,
       content,
     });
-    promptResponse = await promptResponse
-      .populate("userId")
-      .populate("promptId");
+
+    promptResponse = await promptResponse.populate("userId")
+    promptResponse = await promptResponse.populate("promptId")
+    // console.log(promptResponse);
+
     return res.status(200).json(promptResponse);
   } catch (error) {
     return res.status(500).json({
-      error: "An error occurred while trying to create the promptResponse.",
+      error,
     });
   }
 };
@@ -121,7 +127,7 @@ const deletePromptResponse = async (req, res) => {
     return res.status(200).json(promptResponse);
   } catch (error) {
     return res.status(500).json({
-      error: "An error occurred while trying to delete the promptResponse.",
+      error,
     });
   }
 };
@@ -157,7 +163,7 @@ const updatePromptResponse = async (req, res) => {
     return res.status(200).json(promptResponse);
   } catch (error) {
     return res.status(500).json({
-      error: "An error occurred while trying to update the promptResponse.",
+      error,
     });
   }
 };
