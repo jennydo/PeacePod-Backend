@@ -9,12 +9,14 @@ const mongoose = require("mongoose");
 const getPromptResponses = async (req, res) => {
   const { promptId } = req.params;
 
+  const userId = req.user._id
+
   if (!promptId)
     return res.status(400).json({ error: "Prompt id is required" });
 
   let promptResponses;
   try {
-    promptResponses = await PromptResponse.find({ promptId })
+    promptResponses = await PromptResponse.find({ promptId, userId })
       // .populate("userId", "username avatar email")
       // .populate("promptId")
       .sort({ createdAt: -1 });
