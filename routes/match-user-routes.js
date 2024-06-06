@@ -7,6 +7,7 @@ const {
   createMatchUser,
   updateMatchUser,
   deleteMatchUser,
+  deleteAllMatchUsers,
 } = require("../controllers/match-user-controller");
 
 matchUserRouter.use(requireAuth);
@@ -15,5 +16,6 @@ matchUserRouter.get("/:userId", getMatchUser);
 matchUserRouter.post("/", createMatchUser);
 matchUserRouter.patch("/:userId", updateMatchUser);
 matchUserRouter.delete("/:userId", deleteMatchUser);
+matchUserRouter.delete('/', deleteAllMatchUsers)
 
 module.exports = matchUserRouter;
