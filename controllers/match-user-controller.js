@@ -49,6 +49,15 @@ const getMatchUser = async (req, res) => {
   }
 };
 
+// @route GET /matchUsers/getMatch
+// @description: Construct matches for users
+// @access: Private
+const matching = async (req, res) => {
+    ///// Later call K-clusters from Flask services
+
+    return res.status(201).json("Chat Matching Algo")
+}
+
 // @route POST /matchUsers
 // @description: create a new matchUser
 // @body: content
@@ -60,14 +69,6 @@ const createMatchUser = async (req, res) => {
 
   const {
     userId,
-    meditationFeelings,
-    meditationPractices,
-    meditationPlaces,
-    meditationGoals,
-    meditationTools,
-    meditationChallenges,
-    meditationImpacts,
-    meditationWith,
   } = req.body;
 
   if (!userId) {
@@ -200,5 +201,6 @@ module.exports = {
   createMatchUser,
   deleteMatchUser,
   updateMatchUser,
-  deleteAllMatchUsers
+  deleteAllMatchUsers,
+  matching
 };
