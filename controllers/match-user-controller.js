@@ -1,5 +1,5 @@
 const MatchUser = require("../models/match-user-model");
-const User = require('../models/users-model')
+const User = require("../models/users-model");
 const mongoose = require("mongoose");
 
 // @route GET /matchUsers
@@ -8,7 +8,7 @@ const mongoose = require("mongoose");
 const getMatchUsers = async (req, res) => {
   try {
     const matchUsers = await MatchUser.find({})
-      .populate("user")
+      //   .populate("userId")
       .sort({ createdAt: -1 });
     return res.status(201).json(matchUsers);
   } catch (error) {
@@ -77,23 +77,45 @@ const createMatchUser = async (req, res) => {
   const user = await User.findById(userId);
 
   if (!user) {
-    return res.status(404).json({ error: "User not found"})
+    return res.status(404).json({ error: "User not found" });
   }
 
   /// Convert age to age range
-  
+  let ageRange;
+  if (user.age >= 10 && user.age < 20) {
+    ageRange = "10-20";
+  } else if (user.age >= 20 && user.age < 30) {
+    ageRange = "20-30";
+  } else if (user.age >= 30 && user.age < 40) {
+    ageRange = "30-40";
+  } else if (user.age >= 40 && user.age < 50) {
+    ageRange = "40-50";
+  } else {
+    ageRange = "50+";
+  }
 
   try {
+    const matchUser = await MatchUser.findOne({ userId });
+
+    /// If there exists match user with this user id, update, not creating new
+    if (matchUser) {
+      const updateMatchUser = await MatchUser.findOneAndUpdate(
+        { userId },
+        {
+          ...req.body,
+          ageRange,
+        },
+        { new: true }
+      );
+
+      console.log("In create match user, but update current", updateMatchUser);
+      return res.status(201).json(updateMatchUser);
+    }
+
+    /// Currently no match user with this user id
     const newMatchUser = await MatchUser.create({
-      userId,
-      meditationFeelings,
-      meditationPractices,
-      meditationPlaces,
-      meditationGoals,
-      meditationTools,
-      meditationChallenges,
-      meditationImpacts,
-      meditationWith,
+      ...req.body,
+      ageRange,
     });
 
     return res.status(200).json(newMatchUser);
@@ -160,10 +182,23 @@ const updateMatchUser = async (req, res) => {
   }
 };
 
+// @route DELETE /matchUsers
+// @description: delete all match users in DB
+// @access Private
+const deleteAllMatchUsers = async (req, res) => {
+  try {
+    const deleted = await MatchUser.deleteMany({});
+    return res.status(201).json(deleted);
+  } catch (error) {
+    return res.status(400).json({ error });
+  }
+};
+
 module.exports = {
   getMatchUsers,
   getMatchUser,
   createMatchUser,
   deleteMatchUser,
   updateMatchUser,
+  deleteAllMatchUsers
 };
