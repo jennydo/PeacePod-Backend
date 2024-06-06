@@ -1,27 +1,27 @@
 // How have you been feeling lately?
-export const meditationFeelings = [
+const meditationFeelings = [
   "Grounded and at peace",
   "In need of more mindfulness",
   "Calm but seeking deeper clarity",
   "Emotionally unsettled",
   "Overwhelmed by mental fatigue",
   "Radiating inner joy",
-  "Overflowing with gratitude"
+  "Overflowing with gratitude",
 ];
 
 // What type of meditation do you practice most frequently?
-export const meditationPractices = [
+const meditationPractices = [
   "Guided meditation",
   "Mantra meditation",
   "Loving-kindness meditation",
   "Body scan meditation",
   "Breath-focused meditation",
   "Loving-kindness meditation",
-  "Yoga nidra"
+  "Yoga nidra",
 ];
 
 // Where do you usually meditate?
-export const meditationPlaces = [
+const meditationPlaces = [
   "At home in a dedicated space",
   "Outdoors in nature",
   "At a meditation center or class",
@@ -30,7 +30,7 @@ export const meditationPlaces = [
 ];
 
 // What guided you to start meditating?
-export const meditationGoals = [
+const meditationGoals = [
   "To reduce stress and anxiety",
   "To improve focus and concentration",
   "To enhance spiritual growth",
@@ -39,7 +39,7 @@ export const meditationGoals = [
 ];
 
 // Do you use any tools or aids during meditation?
-export const meditationTools = [
+const meditationTools = [
   "Meditation apps",
   "Music or nature sounds",
   "Essential oils or incense",
@@ -48,7 +48,7 @@ export const meditationTools = [
 ];
 
 // What do you find most challenging about meditation?
-export const meditationChallenges = [
+const meditationChallenges = [
   "Staying focused and avoiding distractions",
   "Finding the time to meditate regularly",
   "Dealing with physical discomfort or restlessness",
@@ -57,7 +57,7 @@ export const meditationChallenges = [
 ];
 
 // How has meditation impacted your daily life?
-export const meditationImpacts = [
+const meditationImpacts = [
   "Improved stress management",
   "Enhanced emotional regulation",
   "Increased self-awareness",
@@ -66,10 +66,21 @@ export const meditationImpacts = [
 ];
 
 // Do you prefer to meditate alone or with others?
-export const meditationWith = [
+const meditationWith = [
   "Alone",
   "With a partner",
   "In a small group",
   "In a large group",
   "It varies depending on my mood",
 ];
+
+module.exports = {
+  meditationFeelings,
+  meditationChallenges,
+  meditationPractices,
+  meditationPlaces,
+  meditationTools,
+  meditationGoals,
+  meditationWith,
+  meditationImpacts,
+};
