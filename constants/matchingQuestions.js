@@ -11,12 +11,10 @@ const meditationFeelings = [
 
 // What type of meditation do you practice most frequently?
 const meditationPractices = [
-  "Guided meditation",
-  "Mantra meditation",
-  "Loving-kindness meditation",
-  "Body scan meditation",
-  "Breath-focused meditation",
-  "Loving-kindness meditation",
+  "Guided",
+  "Mantra",
+  "Body scan",
+  "Breath-focused",
   "Yoga nidra",
 ];
 
