@@ -1,13 +1,10 @@
 const mongoose = require("mongoose");
 const {
-  meditationFeelings,
-  meditationPractices,
-  meditationPlaces,
-  meditationGoals,
-  meditationTools,
-  meditationChallenges,
-  meditationImpacts,
-  meditationWith,
+  feelings,
+  coreValues,
+  gratefulFor,
+  practices,
+  motivations
 } = require("../constants/matchingQuestions");
 
 const matchUserSchema = new mongoose.Schema(
@@ -21,30 +18,19 @@ const matchUserSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    meditationFeelings: {
+    feeling: {
       type: String,
-      enum: meditationFeelings,
+      enum: feelings,
       required: false,
     },
-    meditationPractices: {
+    coreValue: {
       type: String,
-      enum: meditationPractices,
+      enum: coreValues,
       required: false,
     },
-    meditationPlaces: { type: String, enum: meditationPlaces, required: false },
-    meditationGoals: { type: String, enum: meditationGoals, required: false },
-    meditationTools: { type: String, enum: meditationTools, required: false },
-    meditationChallenges: {
-      type: String,
-      enum: meditationChallenges,
-      required: false,
-    },
-    meditationImpacts: {
-      type: String,
-      enum: meditationImpacts,
-      required: false,
-    },
-    meditationWith: { type: String, enum: meditationWith, required: false },
+    gratefulFor: { type: String, enum: gratefulFor, required: false },
+    practice: { type: String, enum: practices, required: false },
+    motivation: { type: String, enum: motivations, required: false },
   },
   { timestamps: true }
 );
