@@ -53,10 +53,10 @@ const getMatchUser = async (req, res) => {
 // @description: Construct matches for users
 // @access: Private
 const matching = async (req, res) => {
-    ///// Later call K-clusters from Flask services
+  ///// Later call K-clusters from Flask services
 
-    return res.status(201).json("Chat Matching Algo")
-}
+  return res.status(201).json("Chat Matching Algo");
+};
 
 // @route POST /matchUsers
 // @description: create a new matchUser
@@ -67,9 +67,7 @@ const createMatchUser = async (req, res) => {
     return res.status(400).json({ error: "Missing fields" });
   }
 
-  const {
-    userId,
-  } = req.body;
+  const userId = req.user._id;
 
   if (!userId) {
     return res.status(400).json({ error: "UserId cannot be empty" });
@@ -103,6 +101,7 @@ const createMatchUser = async (req, res) => {
       const updateMatchUser = await MatchUser.findOneAndUpdate(
         { userId },
         {
+          userId,
           ...req.body,
           ageRange,
         },
@@ -202,5 +201,5 @@ module.exports = {
   deleteMatchUser,
   updateMatchUser,
   deleteAllMatchUsers,
-  matching
+  matching,
 };
