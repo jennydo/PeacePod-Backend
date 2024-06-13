@@ -1,4 +1,9 @@
 const calculateAge = (dob) => {
+    // Check if dob is a valid date
+    if (isNaN(Date.parse(dob))) {
+        return NaN;
+    }
+    
     const now = new Date();
 
     // Calculate the difference in years
