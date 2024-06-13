@@ -27,6 +27,7 @@ const voiceRouter = require("./routes/voice-routes");
 const cloudinaryRouter = require('./routes/cloudinary-routes');
 const { generatePrompt } = require("./utils/apis/openaiUtils");
 const promptResponseRouter = require("./routes/prompt-response-routes");
+const matchUserRouter = require("./routes/match-user-routes");
 
 // create express app
 const app = express();
@@ -60,6 +61,7 @@ app.use('/api/spotify', spotifyRouter)
 app.use('/api/cloudinary', cloudinaryRouter)
 
 app.use('/api/promptResponses', promptResponseRouter)
+app.use('/api/matchUsers', matchUserRouter)
 //app.use('/api/voice', voiceRouter)
 
 /// Get daily prompt
