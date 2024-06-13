@@ -65,10 +65,13 @@ app.use('/api/promptResponses', promptResponseRouter)
 /// Get daily prompt
 /// For final results, set to "0 0 * * * " (run at every 00:00). 
 /// Currently runs every 15 minutes for better testing
-cron.schedule("0 */15 * * *", () => {
-  // getNewPrompt();
-  generatePrompt()
-});
+
+// Check if the environment is not test
+if (process.env.NODE_ENV !== 'test') {
+  cron.schedule("0 */15 * * *", () => {
+      generatePrompt();
+  });
+}
 
 // For developing purposes, run every 5 seconds
 // cron.schedule("*/5 * * * * *", () => {
