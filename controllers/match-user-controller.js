@@ -9,7 +9,7 @@ const { calculateAge } = require("../utils/calculateAge");
 const getMatchUsers = async (req, res) => {
   try {
     const matchUsers = await MatchUser.find({})
-      //   .populate("userId")
+      .populate("userId")
       .sort({ createdAt: -1 });
     return res.status(201).json(matchUsers);
   } catch (error) {
