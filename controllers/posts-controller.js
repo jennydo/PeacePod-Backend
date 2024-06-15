@@ -62,15 +62,15 @@ const createPost = async (req, res) => {
 
   const userId = req.user._id;
 
-  const { title, content, isPrompt } = req.body;
+  const { title, content, isPrompt, letterImage } = req.body;
 
-  if (!userId || !title || !content || isPrompt === undefined) {
+  if (!userId || !title || !content || isPrompt === undefined || !letterImage) {
     return res.status(400).json({ error: "Missing fields" });
   }
 
   let post;
   try {
-    post = await Post.create({ userId, title, content, isPrompt });
+    post = await Post.create({ userId, title, content, isPrompt, letterImage });
   } catch (error) {
     return res.status(400).json({ error: error.message });
   }
@@ -106,41 +106,6 @@ const getPrompt = async (req, res) => {
   }
 };
 
-/// Olf format getPrompt
-// // @route POST /api/posts/prompt
-// // @desc get a new prompt post and make current prompt normal post
-// // @access Public
-// const getPrompt = async (req, res) => {
-
-//     const { userId } = req.body
-
-//     if (!userId)
-//     {
-//         return res.status(404).json({ error: "userId is required"})
-//     }
-
-//     try {
-//         /// Old format with constants and index
-//         // const currentPrompt = await Post.findOne({ isPrompt: true })
-
-//         /// If after delete all the prompts, there are no prompt left in the DB -> need to create one here
-//         if (!currentPrompt)
-//         {
-// // Old format, constants and idx
-// const idxObj = await PromptIndex.find()
-// const idx = idxObj[0].current
-// const promptContent = promptsConstants[idx]
-// const newPrompt = await Post.create({ userId, title: "Prompt of the day", content: promptContent, isPrompt: true })
-
-//             return res.status(201).json(newPrompt)
-//         }
-
-//         /// Else if there is any prompt in DB, get from DB
-//         return res.status(201).json(currentPrompt)
-//     } catch (error) {
-//         return res.status(404).json({ error })
-//     }
-// }
 
 // @route PATCH /api/posts/:postId
 // @desc update a post by id
