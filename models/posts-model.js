@@ -19,6 +19,10 @@ const postSchema = new Schema({
         type: Boolean,
         required: true,
         default: false
+    },
+    "letterImage": {
+        type: Image,
+        required: true
     }
 }, { timestamps: true })
 
