@@ -6,9 +6,6 @@ const {
   usersSexualities,
   usersLocations,
 } = require("../constants/usersConstants");
-const {
-  glassConstants,
-} = require("../../PeacePod-Frontend/src/components/UserProfile/Avatar/avatarConstants");
 
 const usersSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
