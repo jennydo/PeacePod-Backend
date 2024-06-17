@@ -24,13 +24,6 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-        
-    - name: Set up Docker
-      run: sudo apt-get update && sudo apt-get install -y docker.io
-
-    - name: Build and test inside a Docker container
-      run: |
-        docker run --rm -v ${{ github.workspace }}:/workspace -w /workspace node:${{ matrix.node-version }} /bin/bash -c "\
-          npm ci && \
-          npm run build --if-present && \
-          npm test"
+    - run: npm ci
+    - run: npm run build --if-present
+    - run: npm test
