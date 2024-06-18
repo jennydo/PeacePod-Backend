@@ -99,6 +99,7 @@ mongoose
       socket.on("setup", (userData) => {
         socket.join(userData._id);
         socket.emit("connected");
+        console.log(userData.username + " joined Room: " + userData._id);
       });
 
       socket.on("join chat", (room) => {
@@ -113,13 +114,13 @@ mongoose
 
         if (!chat.users) return console.log("chat.users not defined");
 
-        socket.in(chat._id).emit("message received", newMessageRecieved);
+        // socket.in(chat._id).emit("message received", newMessageRecieved);
 
-        // chat.users.forEach((user) => {
-        //   // if (user._id == newMessageRecieved.sender._id) return;
+        chat.users.forEach((user) => {
+          // if (user._id == newMessageRecieved.sender._id) return;
 
-        //   socket.in(user._id).emit("message received", newMessageRecieved);
-        // });
+          socket.in(user._id).emit("message received", newMessageRecieved);
+        });
       });
 
       socket.off("setup", () => {
