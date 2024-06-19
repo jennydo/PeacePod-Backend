@@ -74,7 +74,7 @@ const createPost = async (req, res) => {
   } catch (error) {
     return res.status(400).json({ error: error.message });
   }
-
+  post = await post.populate('userId', 'username avatar avatarData');
   res.status(201).json(post);
 };
 
