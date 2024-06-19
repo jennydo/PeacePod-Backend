@@ -127,6 +127,7 @@ const logIn = async (req, res) => {
 // @access Private
 const updateUser = async (req, res) => {
   const { userId } = req.params;
+  const { avatar, avatarData } = req.body;
 
   /// Check if request has params userId
   if (!userId) return res.status(404).json({ error: "User id is required." });
@@ -136,12 +137,11 @@ const updateUser = async (req, res) => {
   /// Check if user exists
   if (!user) return res.status(404).json({ error: "User not found." });
 
-  const { dob } = req.body;
-  const dateOfBirth = new Date(dob);
   /// If exits
   const updatedUser = await User.findOneAndUpdate(
     { _id: userId },
-    { ...req.body, dob: dateOfBirth },
+    // { ...req.body},
+    { avatar: avatar, avatarData: avatarData },
     { new: true }
   );
 
