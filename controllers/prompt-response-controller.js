@@ -16,7 +16,7 @@ const getPromptResponses = async (req, res) => {
 
   let promptResponses;
   try {
-    promptResponses = await PromptResponse.find({ promptId, userId })
+    promptResponses = await PromptResponse.find({ promptId })
       // .populate("userId", "username avatar email")
       // .populate("promptId")
       .sort({ createdAt: -1 });
