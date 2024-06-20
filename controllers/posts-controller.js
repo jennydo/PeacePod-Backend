@@ -74,7 +74,7 @@ const createPost = async (req, res) => {
   } catch (error) {
     return res.status(400).json({ error: error.message });
   }
-
+  post = await post.populate('userId', 'username avatar avatarData');
   res.status(201).json(post);
 };
 
@@ -82,12 +82,6 @@ const createPost = async (req, res) => {
 // @desc get a new prompt post and make current prompt normal post
 // @access Public
 const getPrompt = async (req, res) => {
-  const { userId } = req.body;
-
-  if (!userId) {
-    return res.status(404).json({ error: "userId is required" });
-  }
-
   try {
     /// New format with OpenAI
     const allPrompts = await Prompt.find();
