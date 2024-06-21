@@ -62,15 +62,23 @@ const createPost = async (req, res) => {
 
   const userId = req.user._id;
 
-  const { title, content, isPrompt, letterImage } = req.body;
+  const { title, content, isPrompt, postImageUrl } = req.body;
 
-  if (!userId || !title || !content || isPrompt === undefined || !letterImage) {
+  if (!title || !content || isPrompt === undefined ) {
     return res.status(400).json({ error: "Missing fields" });
+  }
+
+  if (!postImageUrl) {
+    return res.status(400).json({ error: "Missing image" });
+  }
+
+  if (!userId) {
+    return res.status(400).json({ error: "Missing userId" });
   }
 
   let post;
   try {
-    post = await Post.create({ userId, title, content, isPrompt, letterImage });
+    post = await Post.create({ userId, title, content, isPrompt, postImageUrl });
   } catch (error) {
     return res.status(400).json({ error: error.message });
   }
