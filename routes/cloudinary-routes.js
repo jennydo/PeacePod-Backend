@@ -1,5 +1,5 @@
 const express = require('express')
-const { getCloudinaryImages, getCloudinaryAudios, getCloudinaryAudio } = require('../utils/apis/cloudinary');
+const { getCloudinaryImages, getCloudinaryAudios, getCloudinaryAudio, getCloudinaryPostImages } = require('../utils/apis/cloudinary');
 // const requireAuth = require('../middleware/requireAuth');
 
 const cloudinaryRouter = express.Router();
@@ -9,6 +9,7 @@ const cloudinaryRouter = express.Router();
 cloudinaryRouter.get("/", getCloudinaryImages);
 cloudinaryRouter.get("/audios", getCloudinaryAudios);
 cloudinaryRouter.get("/audios/most-recent", getCloudinaryAudio);
+cloudinaryRouter.get("/postImages", getCloudinaryPostImages);
 
 
 module.exports = cloudinaryRouter

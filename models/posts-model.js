@@ -20,8 +20,8 @@ const postSchema = new Schema({
         required: true,
         default: false
     },
-    "letterImage": {
-        type: Image,
+    "postImageUrl": {
+        type: String,
         required: true
     }
 }, { timestamps: true })
