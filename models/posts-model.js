@@ -22,7 +22,8 @@ const postSchema = new Schema({
     },
     "postImageUrl": {
         type: String,
-        required: true
+        required: true,
+        default: 'https://i.pinimg.com/originals/28/7d/cf/287dcf229a8a818b6291b7b2e4d143af.png'
     }
 }, { timestamps: true })
 
