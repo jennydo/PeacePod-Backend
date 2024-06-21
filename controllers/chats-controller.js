@@ -21,14 +21,14 @@ const accessChat = asyncHandler(async (req, res) => {
       { users: { $elemMatch: { $eq: userId } } },       // userId in req body
     ],
   })
-    .populate("users", "username avatar")
+    .populate("users", "username avatar pronounce location interests bio")
     .populate("latestMessage");
 
 
   // populate chat sender
   isChat = await User.populate(isChat, {
     path: "latestMessage.sender",
-    select: "username avatar",
+    select: "username avatar pronounce location interests bio",
   });
 
 
@@ -49,7 +49,7 @@ const accessChat = asyncHandler(async (req, res) => {
       // sends the created chat to users
       const FullChat = await Chat.findOne({ _id: createdChat._id }).populate(
         "users",
-        "username avatar"
+        "username avatar pronounce location interests bio"
       );
       res.status(200).json(FullChat);
     } catch (error) {
@@ -63,14 +63,13 @@ const accessChat = asyncHandler(async (req, res) => {
 const fetchChats = asyncHandler(async (req, res) => {
   try {
     Chat.find({ users: { $elemMatch: { $eq: req.user._id } } })
-      .populate("users", "username avatar")
-      .populate("groupAdmin", "username avatar")
+      .populate("users", "username avatar pronounce location interests bio")
       .populate("latestMessage")
       .sort({ updatedAt: -1 })
       .then(async (results) => {
         results = await User.populate(results, {
           path: "latestMessage.sender",
-          select: "username avatar",
+          select: "username avatar pronounce location interests bio",
         });
         res.status(200).send(results);
       });
