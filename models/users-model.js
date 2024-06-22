@@ -21,6 +21,11 @@ const usersSchema = new mongoose.Schema({
   location: { type: String, enum: usersLocations, required: true },
   interests: [{ type: String, enum: usersInterests }],
   uploadedBackgrounds: [{ type: String, unique: true }],
+  chatMatchedUsers: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: "User",
+    default: [],
+  },
   avatar: {
     type: String,
     default:
