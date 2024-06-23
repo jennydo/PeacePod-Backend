@@ -19,6 +19,11 @@ const postSchema = new Schema({
         type: Boolean,
         required: true,
         default: false
+    },
+    "postImageUrl": {
+        type: String,
+        required: true,
+        default: 'https://i.pinimg.com/originals/28/7d/cf/287dcf229a8a818b6291b7b2e4d143af.png'
     }
 }, { timestamps: true })
 

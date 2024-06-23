@@ -35,6 +35,23 @@ const getCloudinaryImages = async (req, res) => {
       }
 }
 
+const getCloudinaryPostImages = async (req, res) => {
+  try {
+      const folder = 'PeacePod/PostcardBackground';
+  
+      const result = await cloudinary.search
+        .expression(`folder:${folder}`)
+        .execute();
+  
+      const urls = result.resources.map(resource => resource.url); // or secure_url
+  
+      res.json(urls);
+    } catch (error) {
+      console.error('Error retrieving images:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+}
+
 // Folder path for Audio files
 const audioFolderPath = 'Audios';
 const fileType = 'mp3';
@@ -81,4 +98,4 @@ const getCloudinaryAudio = async (req, res) => {
   }
 };
 
-module.exports = { getCloudinaryImages, getCloudinaryAudios, getCloudinaryAudio }
+module.exports = { getCloudinaryImages, getCloudinaryAudios, getCloudinaryAudio, getCloudinaryPostImages }
