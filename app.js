@@ -77,6 +77,7 @@ cron.schedule("0 */15 * * *", () => {
 //     generatePrompt()
 // })
 
+const onlineUsers = new Set();
 
 // connect to MongoDB
 const MONGO_URI = process.env.MONGO_URI;
@@ -99,7 +100,15 @@ mongoose
       socket.on("setup", (userData) => {
         socket.join(userData._id);
         socket.emit("connected");
+        onlineUsers.add(userData._id);
+        socket.emit('onlineUsers', Array.from(onlineUsers));
         console.log(userData.username + " joined Room: " + userData._id);
+      });
+
+      socket.on('userConnected', (userId) => {
+        onlineUsers.add(userId);
+        // socket.emit('updateUserStatus', { userId, status: 'online' });
+        io.emit('updateUserStatus', { userId, status: 'online' });
       });
 
       socket.on("join chat", (room) => {
@@ -124,6 +133,7 @@ mongoose
 
       socket.off("setup", () => {
         console.log("USER DISCONNECTED");
+        io.emit('updateUserStatus', { userId, status: 'offline' });
         socket.leave(userData._id);
       });
     });

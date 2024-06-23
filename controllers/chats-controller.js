@@ -1,7 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const Chat = require("../models/chats-model");
 const User = require("../models/users-model");
-
+const Message = require("../models/messages-model");
 
 // Create a chat Or Access to One Chat
 // assyncHandler helps with async ops and error handling, avoiding repetitive try catch
@@ -21,14 +21,14 @@ const accessChat = asyncHandler(async (req, res) => {
       { users: { $elemMatch: { $eq: userId } } },       // userId in req body
     ],
   })
-    .populate("users", "username avatar")
+    .populate("users", "username avatar pronounce location interests bio")
     .populate("latestMessage");
 
 
   // populate chat sender
   isChat = await User.populate(isChat, {
     path: "latestMessage.sender",
-    select: "username avatar",
+    select: "username avatar pronounce location interests bio",
   });
 
 
@@ -39,7 +39,7 @@ const accessChat = asyncHandler(async (req, res) => {
   } else {
     // Create a new chat
     var chatData = {
-      chatName: "sender",
+      chatName: req.user.username,
       isGroupChat: false,
       users: [req.user._id, userId],
     };
@@ -49,7 +49,7 @@ const accessChat = asyncHandler(async (req, res) => {
       // sends the created chat to users
       const FullChat = await Chat.findOne({ _id: createdChat._id }).populate(
         "users",
-        "username avatar"
+        "username avatar pronounce location interests bio"
       );
       res.status(200).json(FullChat);
     } catch (error) {
@@ -63,14 +63,13 @@ const accessChat = asyncHandler(async (req, res) => {
 const fetchChats = asyncHandler(async (req, res) => {
   try {
     Chat.find({ users: { $elemMatch: { $eq: req.user._id } } })
-      .populate("users", "username avatar")
-      .populate("groupAdmin", "username avatar")
+      .populate("users", "username avatar pronounce location interests bio")
       .populate("latestMessage")
       .sort({ updatedAt: -1 })
       .then(async (results) => {
         results = await User.populate(results, {
           path: "latestMessage.sender",
-          select: "username avatar",
+          select: "username avatar pronounce location interests bio",
         });
         res.status(200).send(results);
       });
@@ -80,7 +79,23 @@ const fetchChats = asyncHandler(async (req, res) => {
   }
 });
 
-
+const deleteChat = async (req, res) => {
+  const { chatId } = req.params;
+  console.log('chatId to delete', chatId);
+  if (!chatId) {
+    return res.status(400).json({ error: "Chat ID is required." });
+  }
+  try {
+    // await Message.deleteMany({ chatId: id });
+    const chat = await Chat.findOneAndDelete({ _id: chatId });
+    if (!chat) {
+      return res.status(404).json({ error: "Chat not found." });
+    }
+    res.status(200).json({ message: "Chat deleted successfully.", chat });
+  } catch (error) {
+    return res.status(500).json({ error: "An error occurred while trying to delete the chat." });
+  }
+};
 
 //--------------------------------------GROUP CHAT------------------------------------------------
 // Create New Group Chat
@@ -124,15 +139,9 @@ const renameGroup = asyncHandler(async (req, res) => {
 
   const updatedChat = await Chat.findByIdAndUpdate(
     chatId,
-    {
-      chatName: chatName,
-    },
-    {
-      new: true,
-    }
-  )
-    .populate("users", "-password")
-    .populate("groupAdmin", "-password");
+    { chatName },
+    { new: true }  // Ensure that the updated document is returned
+  ).populate("users", "-password");
 
   if (!updatedChat) {
     res.status(404);
@@ -199,6 +208,7 @@ const addToGroup = asyncHandler(async (req, res) => {
 module.exports = {
   accessChat,
   fetchChats,
+  deleteChat,
   createGroupChat,
   renameGroup,
   addToGroup,
