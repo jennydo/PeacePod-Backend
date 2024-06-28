@@ -101,13 +101,12 @@ mongoose
         socket.join(userData._id);
         socket.emit("connected");
         onlineUsers.add(userData._id);
-        socket.emit('onlineUsers', Array.from(onlineUsers));
+        io.emit('onlineUsers', Array.from(onlineUsers));
         console.log(userData.username + " joined Room: " + userData._id);
       });
 
       socket.on('userConnected', (userId) => {
         onlineUsers.add(userId);
-        // socket.emit('updateUserStatus', { userId, status: 'online' });
         io.emit('updateUserStatus', { userId, status: 'online' });
       });
 
@@ -131,10 +130,10 @@ mongoose
         });
       });
 
-      socket.off("setup", () => {
+      socket.off("setup", (userId) => {
         console.log("USER DISCONNECTED");
         io.emit('updateUserStatus', { userId, status: 'offline' });
-        socket.leave(userData._id);
+        socket.leave(userId);
       });
     });
   })
