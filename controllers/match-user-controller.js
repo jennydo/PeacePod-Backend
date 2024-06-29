@@ -1,7 +1,9 @@
 const MatchUser = require("../models/match-user-model");
+const MatchingPairs = require("../models/matching-pairs-model");
 const User = require("../models/users-model");
 const mongoose = require("mongoose");
 const { calculateAge } = require("../utils/calculateAge");
+const { ObjectId } = require('mongodb');
 
 // @route GET /matchUsers
 // @description: Find all matchUsers and sort them by createdAt in descending order
@@ -70,7 +72,7 @@ const fetchMatchPairs = async (req, res) => {
 
     let pairings;
     try {
-      pairings = await matchingPairs.create({ matchingPairs });
+      pairings = await MatchingPairs.create({ matchingPairs });
     } catch (error) {
       return res.status(400).json({ error: error.message });
     }
@@ -93,21 +95,20 @@ const getUserMatchPair = async (req, res) => {
 
   if (!userId) return res.status(400).json({ error: "User id is required" });
 
-  if (!mongoose.Types.ObjectId.isValid(userId)) {
-    return res.status(400).json({ error: "Not a valid matchUser id." });
-  }
-
-
-  let userMatchPair;
+  
   try {
-    const lastMatchingPairs = await MatchingPairs.findOne().sort({ _id: -1 });
+    const lastMatchingPairsObj = await MatchingPairs.findOne().sort({ _id: -1 });
+    const lastMatchingPairs = lastMatchingPairsObj['matchingPairs'];
 
     if (!lastMatchingPairs) {
       return res.status(404).json({ error: "lastMatchingPairs not found." });
     }
 
+    // double check this var to put outside try catch?
+    let userMatchPair;
     if (lastMatchingPairs.has(userId)) {
-      userMatchPair = await lastMatchingPairs.get(userId).populate("userId", "username avatar email");
+      userMatchPairId = await lastMatchingPairs.get(userId);
+      userMatchPair = await User.findById(new ObjectId(userMatchPairId));
     } else {
       return res.status(404).json({ error: "userId not found." });
     }
