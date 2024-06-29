@@ -68,6 +68,7 @@ const fetchMatchPairs = async (req, res) => {
 
     const matchingPairs = await response.json();
 
+    let pairings;
     try {
       pairings = await matchingPairs.create({ matchingPairs });
     } catch (error) {
