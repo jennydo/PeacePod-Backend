@@ -50,7 +50,7 @@ const getMatchUser = async (req, res) => {
   }
 };
 
-// @route GET /matchUsers/getMatch
+// @route GET 
 // @description: Construct matches for users
 // @access: Private
 const fetchMatchPairs = async (req, res) => {
@@ -66,14 +66,59 @@ const fetchMatchPairs = async (req, res) => {
       throw new Error(`Error: ${response.status}`);
     }
 
-    const pairingData = await response.json();
-    return res.status(200).json(pairingData);
+    const matchingPairs = await response.json();
+
+    try {
+      pairings = await matchingPairs.create({ matchingPairs });
+    } catch (error) {
+      return res.status(400).json({ error: error.message });
+    }
+    pairings = await pairings.populate('matchingPairs');
+
+    return res.status(200).json(pairings);
+
   } catch (error) {
     console.error('Error fetching match pairs:', error);
     return res.status(500).json({ error: 'Internal Server Error' });
   }
 
 };
+
+// @route GET /matchUsers/matchingPairs/:userId
+// @description: get the user that got matched with this user
+// @body: this userId
+const getUserMatchPair = async (req, res) => {
+  const { userId } = req.params;
+
+  if (!userId) return res.status(400).json({ error: "User id is required" });
+
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
+    return res.status(400).json({ error: "Not a valid matchUser id." });
+  }
+
+
+  let userMatchPair;
+  try {
+    const lastMatchingPairs = await MatchingPairs.findOne().sort({ _id: -1 });
+
+    if (!lastMatchingPairs) {
+      return res.status(404).json({ error: "lastMatchingPairs not found." });
+    }
+
+    if (lastMatchingPairs.has(userId)) {
+      userMatchPair = await lastMatchingPairs.get(userId).populate("userId", "username avatar email");
+    } else {
+      return res.status(404).json({ error: "userId not found." });
+    }
+
+    return res.status(200).json(userMatchPair);
+  } catch (error) {
+    return res.status(500).json({
+      error,
+    });
+  }
+}
+
 
 // @route POST /matchUsers
 // @description: create a new matchUser
@@ -221,4 +266,5 @@ module.exports = {
   updateMatchUser,
   deleteAllMatchUsers,
   fetchMatchPairs,
+  getUserMatchPair
 };

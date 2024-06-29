@@ -28,6 +28,7 @@ const cloudinaryRouter = require('./routes/cloudinary-routes');
 const { generatePrompt } = require("./utils/apis/openaiUtils");
 const promptResponseRouter = require("./routes/prompt-response-routes");
 const matchUserRouter = require("./routes/match-user-routes");
+const { fetchMatchPairs } = require("./controllers/match-user-controller");
 
 // create express app
 const app = express();
@@ -70,6 +71,10 @@ app.use('/api/matchUsers', matchUserRouter)
 cron.schedule("0 */15 * * *", () => {
   // getNewPrompt();
   generatePrompt()
+});
+
+cron.schedule('0 20 * * *', () => {
+  fetchMatchPairs();
 });
 
 // For developing purposes, run every 5 seconds

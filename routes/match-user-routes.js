@@ -9,11 +9,13 @@ const {
   deleteMatchUser,
   deleteAllMatchUsers,
   fetchMatchPairs,
+  getUserMatchPair,
 } = require("../controllers/match-user-controller");
 
 matchUserRouter.use(requireAuth);
 matchUserRouter.get("/", getMatchUsers);
-matchUserRouter.get('/matching', fetchMatchPairs);
+matchUserRouter.get('/matchingPairs', fetchMatchPairs);
+matchUserRouter.get('/matchingPairs/:userId', getUserMatchPair);
 matchUserRouter.get("/:userId", getMatchUser);
 matchUserRouter.post("/", createMatchUser);
 matchUserRouter.patch("/:userId", updateMatchUser);
