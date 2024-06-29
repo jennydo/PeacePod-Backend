@@ -53,10 +53,26 @@ const getMatchUser = async (req, res) => {
 // @route GET /matchUsers/getMatch
 // @description: Construct matches for users
 // @access: Private
-const matching = async (req, res) => {
-  ///// Later call K-clusters from Flask services
+const fetchMatchPairs = async (req, res) => {
+  try {
+    const response = await fetch('http://localhost:5002/matchPairs', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
 
-  return res.status(201).json("Chat Matching Algo");
+    if (!response.ok) {
+      throw new Error(`Error: ${response.status}`);
+    }
+
+    const pairingData = await response.json();
+    return res.status(200).json(pairingData);
+  } catch (error) {
+    console.error('Error fetching match pairs:', error);
+    return res.status(500).json({ error: 'Internal Server Error' });
+  }
+
 };
 
 // @route POST /matchUsers
@@ -204,5 +220,5 @@ module.exports = {
   deleteMatchUser,
   updateMatchUser,
   deleteAllMatchUsers,
-  matching,
+  fetchMatchPairs,
 };
