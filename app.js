@@ -73,9 +73,10 @@ cron.schedule("0 */15 * * *", () => {
   generatePrompt()
 });
 
-cron.schedule('0 20 * * *', () => {
-  fetchMatchPairs();
-});
+// Get Matching Pairs at 8pm everyday
+// cron.schedule('14 18 * * *', () => {
+//   fetchMatchPairs();
+// });
 
 // For developing purposes, run every 5 seconds
 // cron.schedule("*/5 * * * * *", () => {
