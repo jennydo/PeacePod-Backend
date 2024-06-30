@@ -28,6 +28,7 @@ const cloudinaryRouter = require('./routes/cloudinary-routes');
 const { generatePrompt } = require("./utils/apis/openaiUtils");
 const promptResponseRouter = require("./routes/prompt-response-routes");
 const matchUserRouter = require("./routes/match-user-routes");
+const { fetchMatchPairs } = require("./controllers/match-user-controller");
 
 // create express app
 const app = express();
@@ -71,6 +72,11 @@ cron.schedule("0 */15 * * *", () => {
   // getNewPrompt();
   generatePrompt()
 });
+
+// Get Matching Pairs at 8pm everyday
+// cron.schedule('14 18 * * *', () => {
+//   fetchMatchPairs();
+// });
 
 // For developing purposes, run every 5 seconds
 // cron.schedule("*/5 * * * * *", () => {
@@ -140,19 +146,3 @@ mongoose
   .catch((error) => {
     console.log(error);
   });
-
-// io.on('connection', (socket) => {
-
-//     console.log('made socket connection', socket.id);
-
-//     // Handle chat event
-//     socket.on('chat', (data) => {
-//         io.sockets.emit('chat', data);
-//     });
-
-//     // Handle typing event
-//     socket.on('typing', (data) => {
-//         socket.broadcast.emit('typing', data);
-//     })
-
-// });
