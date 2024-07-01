@@ -1,25 +1,14 @@
-const mongoose = require("mongoose");
 const request = require("supertest");
 const app = require("../../app");
-// require("dotenv").config();
 
 let token;
 
-/* Connecting to the database before each test suite. */
-beforeEach(async () => {
-    await mongoose.connect(process.env.MONGO_URI);
-    
+beforeAll(async () => {
     const response = await request(app).post("/api/users/login").send({
         username: process.env.USERNAME_TEST,
         password: process.env.PASSWORD_TEST,
     });
     token = response.body.token;
-});
-
-/* Closing database connection after each test suite. */
-afterEach(async () => {
-    await mongoose.disconnect();
-    // await mongoose.connection.close();
 });
 
 describe("GET /api/posts", () => {
