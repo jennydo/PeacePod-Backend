@@ -33,5 +33,10 @@
     "cross-env": "^7.0.3",
     "jest": "^29.7.0",
     "supertest": "^7.0.0"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "setupFilesAfterEnv": ["<rootDir>/jest.setup.js"],
+    "testTimeout": 30000 
   }
 }
