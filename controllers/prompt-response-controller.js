@@ -16,10 +16,10 @@ const getPromptResponses = async (req, res) => {
 
   let promptResponses;
   try {
-    promptResponses = await PromptResponse.find({ promptId, userId })
+    promptResponses = await PromptResponse.find({ promptId })
       // .populate("userId", "username avatar email")
       // .populate("promptId")
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: 1 });
     return res.status(201).json(promptResponses);
   } catch (error) {
     return res.status(500).json({
