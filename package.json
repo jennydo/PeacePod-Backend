@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "cross-env NODE_ENV=test jest",
+    "test": "cross-env NODE_ENV=test jest --runInBand --detectOpenHandles --forceExit",
     "start": "nodemon app.js"
   },
   "author": "",
@@ -37,6 +37,8 @@
   "jest": {
     "testEnvironment": "node",
     "setupFilesAfterEnv": ["<rootDir>/jest.setup.js"],
-    "testTimeout": 30000 
+    "testTimeout": 30000,
+    "detectOpenHandles": true,
+    "verbose": true
   }
 }

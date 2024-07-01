@@ -90,6 +90,8 @@ const onlineUsers = new Set();
 
 // connect to MongoDB
 const MONGO_URI = process.env.MONGO_URI;
+
+if (process.env.NODE_ENV !== 'test') {
 mongoose
   .connect(MONGO_URI)
   .then(() => {
@@ -149,5 +151,6 @@ mongoose
   .catch((error) => {
     console.log(error);
   });
+}
 
 module.exports = app;
