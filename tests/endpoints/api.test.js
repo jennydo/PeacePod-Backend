@@ -1,25 +1,25 @@
 const mongoose = require("mongoose");
 const request = require("supertest");
 const app = require("../../app");
-require("dotenv").config();
+// require("dotenv").config();
 
 let token;
 
 /* Connecting to the database before each test suite. */
-beforeAll(async () => {
+beforeEach(async () => {
     await mongoose.connect(process.env.MONGO_URI);
     
     const response = await request(app).post("/api/users/login").send({
         username: process.env.USERNAME_TEST,
         password: process.env.PASSWORD_TEST,
     });
-    
     token = response.body.token;
 });
 
 /* Closing database connection after each test suite. */
-afterAll(async () => {
+afterEach(async () => {
     await mongoose.disconnect();
+    // await mongoose.connection.close();
 });
 
 describe("GET /api/posts", () => {
@@ -48,18 +48,24 @@ describe("POST /api/posts", () => {
         const testTitle = "Unit Testing Post";
         const testContent = "lorem ipsum dolor sit amet";
         const testIsPrompt = false;
-
-        const response = await request(app)
-            .post("/api/posts")
-            .send({
-                title: testTitle, 
-                content: testContent, 
-                isPrompt: testIsPrompt
-            })
-            .set({
-                Authorization: "bearer " + token,
-                "Content-Type": "application/json",
-            });
+        const image = 'http://images.example.com'
+        let response; 
+        try {
+            response = await request(app)
+               .post("/api/posts")
+               .send({
+                    title: testTitle, 
+                    content: testContent, 
+                    isPrompt: testIsPrompt,
+                    postImageUrl: image
+                })
+               .set({
+                    Authorization: "bearer " + token,
+                    "Content-Type": "application/json",
+                });
+        } catch (error) {
+            console.error("Error in POST /api/posts", error);
+        }
     
         expect(response.statusCode).toBe(201);
         expect(response.body.title).toBe(testTitle);
@@ -157,13 +163,18 @@ describe("POST /api/chats", () => {
     });
 
     it("should return UserId param not sent with request", async () => {
-        const response = await request(app)
+        let response;
+        try {
+            response = await request(app)
             .post("/api/chats")
             .set({
                 Authorization: "bearer " + token,
                 "Content-Type": "application/json",
-            });    
+            });  
+        } catch (error) {
+            expect(error).toBe("UserId param not sent with request");
+        }
+          
         expect(response.statusCode).toBe(400);
-        // expect(response.body.error).toBe("UserId param not sent with request");
     });
 });
