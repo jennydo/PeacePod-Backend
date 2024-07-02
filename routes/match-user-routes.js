@@ -15,7 +15,7 @@ const {
 matchUserRouter.use(requireAuth);
 matchUserRouter.get("/", getMatchUsers);
 matchUserRouter.post('/matchingPairs', fetchMatchPairs);
-matchUserRouter.get('/matchingPairs/:userId', getUserMatchPair);
+matchUserRouter.get('/matchingPairs', getUserMatchPair);
 matchUserRouter.get("/:userId", getMatchUser);
 matchUserRouter.post("/", createMatchUser);
 matchUserRouter.patch("/:userId", updateMatchUser);

@@ -21,12 +21,12 @@ const getMatchUsers = async (req, res) => {
   }
 };
 
-// @route GET /matchUsers/:userId
+// @route GET /matchUsers/
 // @description: get a specific matchUser by its id
 // @params: user id
 // @access Private
 const getMatchUser = async (req, res) => {
-  const { userId } = req.params;
+  const userId = req.user._id;
 
   if (!userId) return res.status(400).json({ error: "User id is required" });
 
@@ -87,11 +87,10 @@ const fetchMatchPairs = async (req, res) => {
 
 };
 
-// @route GET /matchUsers/matchingPairs/:userId
+// @route GET /matchUsers/matchingPairs/
 // @description: get the user that got matched with this user
-// @body: this userId
 const getUserMatchPair = async (req, res) => {
-  const { userId } = req.params;
+  const userId = req.user._id;
 
   if (!userId) return res.status(400).json({ error: "User id is required" });
 
