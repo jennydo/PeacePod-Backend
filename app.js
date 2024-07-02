@@ -1,7 +1,10 @@
 const dotenv = require("dotenv");
 const env = dotenv.config();
-if (env.error) {
-  throw new Error("Failed to load the .env file!");
+
+if (process.env.NODE_ENV !== 'test') {
+  if (env.error) {
+    throw new Error("Failed to load the .env file!");
+  }
 }
 
 const mongoose = require("mongoose");
