@@ -44,6 +44,12 @@
     ],
     "testTimeout": 30000,
     "detectOpenHandles": true,
-    "verbose": true
+    "verbose": true,
+    "transform": {
+      "^.+\\.js$": "babel-jest"
+    },
+    "transformIgnorePatterns": [
+      "/node_modules/(?!(bson)/)"
+    ]
   }
 }
