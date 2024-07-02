@@ -1,0 +1,39 @@
+name: Run Tests CI
+
+on:
+  push:
+    branches: [ "tests5", "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.x, 20.x]
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install dependencies
+        run: npm install
+      - name: Run tests
+        run: npm run test
+        env:
+          CI: true
+          MONGO_URI_TEST: ${{ secrets.MONGO_URI_TEST }}
+          TEST_PORT: ${{ secrets.TEST_PORT }}
+          USERNAME_TEST: ${{ secrets.USERNAME_TEST }}
+          PASSWORD_TEST: ${{ secrets.PASSWORD_TEST }}
+          USER_ID_TEST: ${{ secrets.USER_ID_TEST }}
+          USER2_ID_TEST: ${{ secrets.USER2_ID_TEST }}
+          POST_ID_TEST: ${{ secrets.POST_ID_TEST }}
+
+      # - name: Run build command if exists
+      #   run: |
+      #     npm run build --if-present
