@@ -59,6 +59,31 @@ const accessChat = asyncHandler(async (req, res) => {
   }
 });
 
+const createChat = asyncHandler(async (req, res) => {
+  const { userId } = req.body;
+
+  // Create a new chat
+  var chatData = {
+    chatName: "New Matched Chat",
+    isGroupChat: false,
+    users: [req.user._id, userId],
+  }
+
+  try {
+    const createdChat = await Chat.create(chatData);
+    // sends the created chat to users
+    const FullChat = await Chat.findOne({ _id: createdChat._id }).populate(
+      "users",
+      "username avatar pronounce location interests bio"
+    );
+    res.status(200).json(FullChat);
+  } catch (error) {
+    res.status(400);
+    throw new Error(error.message);
+  }
+  
+});
+
 // Fetch all chats for user
 const fetchChats = asyncHandler(async (req, res) => {
   try {
@@ -213,4 +238,5 @@ module.exports = {
   renameGroup,
   addToGroup,
   removeFromGroup,
+  createChat,
 };
