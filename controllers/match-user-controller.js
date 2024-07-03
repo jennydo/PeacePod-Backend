@@ -58,7 +58,7 @@ const getMatchUser = async (req, res) => {
 const fetchMatchPairs = async (req, res) => {
   try {
     const response = await fetch('http://localhost:5002/matchPairs', {
-      method: 'GET',
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       }
@@ -90,7 +90,7 @@ const fetchMatchPairs = async (req, res) => {
 // @route GET /matchUsers/matchingPairs/
 // @description: get the user that got matched with this user
 const getUserMatchPair = async (req, res) => {
-  const userId = req.user._id;
+  const userId = req.user._id.toString();
 
   if (!userId) return res.status(400).json({ error: "User id is required" });
 
