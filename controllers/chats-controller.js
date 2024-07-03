@@ -39,7 +39,7 @@ const accessChat = asyncHandler(async (req, res) => {
   } else {
     // Create a new chat
     var chatData = {
-      chatName: req.user.username,
+      chatName: "New Matched User",
       isGroupChat: false,
       users: [req.user._id, userId],
     };
